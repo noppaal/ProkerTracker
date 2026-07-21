@@ -42,7 +42,7 @@ export const MilestoneCell = ({
         onClick={() => hasAccess && setIsOpen(true)}
         style={{
           display: 'flex', flexDirection: 'column', gap: 4, cursor: hasAccess ? 'pointer' : 'default',
-          padding: '2px 4px', borderRadius: 6, transition: 'background 0.15s'
+          padding: '4px 6px', borderRadius: 8, transition: 'background 0.15s'
         }}
         className="nav-item"
         title={hasAccess ? 'Klik untuk mengubah status milestone & tanggal' : ''}
@@ -50,7 +50,7 @@ export const MilestoneCell = ({
         <SBadge s={currentStatus} isEditable={hasAccess} />
         
         {targetDate && (
-          <span style={{ fontSize: 11, color: '#A8A29E', fontFamily: "'Geist Mono', monospace" }}>
+          <span style={{ fontSize: 11, color: '#64748B', fontFamily: "'Geist Mono', monospace", fontWeight: 500 }}>
             {targetDate}
           </span>
         )}
@@ -62,42 +62,42 @@ export const MilestoneCell = ({
       {isOpen && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 50,
-          background: 'rgba(28, 25, 23, 0.4)', backdropFilter: 'blur(2px)',
+          background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(2px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16
         }}>
           <div style={{
-            background: '#fff', width: '100%', maxWidth: 360, borderRadius: 12,
-            border: '1px solid #EAEAE8', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
-            overflow: 'hidden', fontSize: 12
+            background: '#FFFFFF', width: '100%', maxWidth: 360, borderRadius: 16,
+            border: '1px solid #E2E8F0', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+            overflow: 'hidden', fontSize: 13
           }}>
             
             {/* Popover Header */}
             <div style={{
-              padding: '12px 16px', background: '#FAFAF9', borderBottom: '1px solid #EAEAE8',
+              padding: '14px 18px', background: '#F8FAFC', borderBottom: '1px solid #E2E8F0',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between'
             }}>
-              <span style={{ fontWeight: 600, color: '#1C1917', fontSize: 13 }}>Update Status Milestone</span>
+              <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 14 }}>Update Status Milestone</span>
               <button 
                 onClick={() => setIsOpen(false)} 
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#A8A29E', padding: 2 }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: 2 }}
               >
-                <X size={14} />
+                <X size={16} />
               </button>
             </div>
 
             {/* Form Body */}
-            <form onSubmit={handleSave} style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <form onSubmit={handleSave} style={{ padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
               
               <div>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#78716C', marginBottom: 4 }}>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#475569', marginBottom: 5 }}>
                   Status Milestone
                 </label>
                 <select
                   value={formStatus}
                   onChange={(e) => setFormStatus(e.target.value)}
                   style={{
-                    width: '100%', background: '#F7F7F5', border: '1px solid #EAEAE8',
-                    borderRadius: 6, padding: '6px 10px', fontSize: 12, color: '#1C1917'
+                    width: '100%', background: '#F8FAFC', border: '1px solid #E2E8F0',
+                    borderRadius: 8, padding: '8px 12px', fontSize: 13, color: '#0F172A', fontWeight: 500
                   }}
                 >
                   {STATUS_OPTIONS.map(opt => (
@@ -107,7 +107,7 @@ export const MilestoneCell = ({
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#78716C', marginBottom: 4 }}>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#475569', marginBottom: 5 }}>
                   Target Date (Rencana)
                 </label>
                 <input
@@ -115,15 +115,15 @@ export const MilestoneCell = ({
                   value={formTargetDate}
                   onChange={(e) => setFormTargetDate(e.target.value)}
                   style={{
-                    width: '100%', background: '#F7F7F5', border: '1px solid #EAEAE8',
-                    borderRadius: 6, padding: '6px 10px', fontSize: 12, color: '#1C1917',
+                    width: '100%', background: '#F8FAFC', border: '1px solid #E2E8F0',
+                    borderRadius: 8, padding: '8px 12px', fontSize: 13, color: '#0F172A',
                     fontFamily: "'Geist Mono', monospace"
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#78716C', marginBottom: 4 }}>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#475569', marginBottom: 5 }}>
                   Actual Date (Selesai Real)
                 </label>
                 <input
@@ -131,15 +131,15 @@ export const MilestoneCell = ({
                   value={formActualDate}
                   onChange={(e) => setFormActualDate(e.target.value)}
                   style={{
-                    width: '100%', background: '#F7F7F5', border: '1px solid #EAEAE8',
-                    borderRadius: 6, padding: '6px 10px', fontSize: 12, color: '#1C1917',
+                    width: '100%', background: '#F8FAFC', border: '1px solid #E2E8F0',
+                    borderRadius: 8, padding: '8px 12px', fontSize: 13, color: '#0F172A',
                     fontFamily: "'Geist Mono', monospace"
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#78716C', marginBottom: 4 }}>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#475569', marginBottom: 5 }}>
                   Catatan Perkembangan
                 </label>
                 <textarea
@@ -148,19 +148,19 @@ export const MilestoneCell = ({
                   onChange={(e) => setFormNotes(e.target.value)}
                   placeholder="Tambah rincian catatan..."
                   style={{
-                    width: '100%', background: '#F7F7F5', border: '1px solid #EAEAE8',
-                    borderRadius: 6, padding: '6px 10px', fontSize: 12, color: '#1C1917'
+                    width: '100%', background: '#F8FAFC', border: '1px solid #E2E8F0',
+                    borderRadius: 8, padding: '8px 12px', fontSize: 13, color: '#0F172A'
                   }}
                 />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 4 }}>
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
                   style={{
-                    padding: '6px 12px', borderRadius: 6, background: '#F5F5F4',
-                    border: '1px solid #E7E5E4', color: '#57534E', fontSize: 12, cursor: 'pointer'
+                    padding: '8px 14px', borderRadius: 8, background: '#F1F5F9',
+                    border: '1px solid #E2E8F0', color: '#475569', fontSize: 13, fontWeight: 600, cursor: 'pointer'
                   }}
                 >
                   Batal
@@ -168,8 +168,9 @@ export const MilestoneCell = ({
                 <button
                   type="submit"
                   style={{
-                    padding: '6px 14px', borderRadius: 6, background: '#0F766E',
-                    border: 'none', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer'
+                    padding: '8px 16px', borderRadius: 8, background: '#2563EB',
+                    border: 'none', color: '#FFFFFF', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                    boxShadow: '0 2px 4px rgba(37, 99, 235, 0.2)'
                   }}
                 >
                   Simpan Status

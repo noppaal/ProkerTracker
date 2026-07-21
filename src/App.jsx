@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Sidebar } from './components/Sidebar';
-import { Header } from './components/Header';
 import { FilterBar } from './components/FilterBar';
 import { ProjectsOverview } from './components/ProjectsOverview';
 import { MasterProkerTable } from './components/MasterProkerTable';
@@ -10,6 +9,14 @@ import { DynamicMilestoneModal } from './components/Modals/DynamicMilestoneModal
 import { AppsScriptConfigModal } from './components/Modals/AppsScriptConfigModal';
 import { PermissionsModal } from './components/Modals/PermissionsModal';
 import { AuthModal } from './components/Auth/AuthModal';
+import { 
+  BarChart3, 
+  RefreshCw, 
+  CheckCircle2, 
+  TrendingUp, 
+  Plus,
+  Menu
+} from 'lucide-react';
 
 import {
   INITIAL_MASTER_PROKER,
@@ -244,11 +251,39 @@ export default function App() {
     setIsProkerModalOpen(true);
   };
 
-  // Dynamic Milestone CRUD
+  // Dynamic Milestone CRUD Handlers
   const handleAddMilestoneColumn = (newMilestone) => {
     const updatedMilestones = [...dynamicMilestones, newMilestone];
     setDynamicMilestones(updatedMilestones);
     handleSaveDataState(projects, masterProkers, updatedMilestones, users);
+  };
+
+  const handleUpdateMilestoneColumn = (updatedMilestone) => {
+    const updatedMilestones = dynamicMilestones.map(m =>
+      m.id === updatedMilestone.id ? updatedMilestone : m
+    );
+    setDynamicMilestones(updatedMilestones);
+    handleSaveDataState(projects, masterProkers, updatedMilestones, users);
+  };
+
+  const handleDeleteMilestoneColumn = (milestoneId) => {
+    const updatedMilestones = dynamicMilestones.filter(m => m.id !== milestoneId);
+    
+    // Clean up milestone data from all sub items
+    const updatedProkers = masterProkers.map(proker => {
+      if (!proker.subItems) return proker;
+      const subItems = proker.subItems.map(sub => {
+        if (!sub.milestones || !sub.milestones[milestoneId]) return sub;
+        const newMilestones = { ...sub.milestones };
+        delete newMilestones[milestoneId];
+        return { ...sub, milestones: newMilestones };
+      });
+      return { ...proker, subItems };
+    });
+
+    setDynamicMilestones(updatedMilestones);
+    setMasterProkers(updatedProkers);
+    handleSaveDataState(projects, updatedProkers, updatedMilestones, users);
   };
 
   // Sync Data Manually
@@ -277,22 +312,30 @@ export default function App() {
     return masterProkers.filter(p => p.projectId === activeProjectId);
   }, [masterProkers, activeProjectId]);
 
-  // KPI Stats
+  // Refined KPI Stats Calculation
   const stats = useMemo(() => {
     const totalProker = projectProkers.length;
     const p1Count = projectProkers.filter(p => p.priority === 'P1').length;
     
     let totalSubItems = 0;
     let sumProgress = 0;
+    let inProgressCount = 0;
+    let completedCount = 0;
 
     projectProkers.forEach(p => {
+      const prog = calculateMasterProkerProgress(p, dynamicMilestones);
       totalSubItems += p.subItems?.length || 0;
-      sumProgress += calculateMasterProkerProgress(p, dynamicMilestones);
+      sumProgress += prog;
+      if (prog === 100) {
+        completedCount++;
+      } else if (prog > 0) {
+        inProgressCount++;
+      }
     });
 
     const overallProgress = totalProker > 0 ? Math.round(sumProgress / totalProker) : 0;
 
-    return { totalProker, p1Count, totalSubItems, overallProgress };
+    return { totalProker, p1Count, totalSubItems, overallProgress, inProgressCount, completedCount };
   }, [projectProkers, dynamicMilestones]);
 
   // Filtered Master Prokers logic
@@ -341,7 +384,7 @@ export default function App() {
   }, [projectProkers, priorityFilter, searchQuery, statusFilter, projects]);
 
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#F7F7F5' }}>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#F8FAFC' }}>
       
       {/* Sidebar Navigation */}
       <Sidebar
@@ -367,19 +410,149 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0, background: '#fff' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0, background: '#F8FAFC' }}>
         
-        {/* Top Header */}
-        <Header
-          stats={stats}
-          activeProject={activeProject}
-          sidebarOpen={sidebarOpen}
-          onToggleSidebar={() => setSidebarOpen(prev => !prev)}
-        />
-
-        {/* Main Body */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px', background: '#fff' }}>
+        {/* Main Body Workspace */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', background: '#F8FAFC' }}>
           
+          {/* Main Title Section + Sidebar Toggle + Add Proker Button */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              {!sidebarOpen && (
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  style={{
+                    padding: '8px 10px', borderRadius: 8, border: '1px solid #E2E8F0',
+                    background: '#FFFFFF', cursor: 'pointer', color: '#64748B',
+                    display: 'flex', alignItems: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+                  }}
+                  title="Buka Sidebar"
+                >
+                  <Menu size={18} />
+                </button>
+              )}
+
+              <div>
+                <h1 style={{
+                  margin: 0, fontSize: 30, fontWeight: 800, color: '#0F172A',
+                  letterSpacing: '-0.02em', lineHeight: 1.2
+                }}>
+                  {activeProject ? activeProject.name : 'Work Program Tracker'}
+                </h1>
+                <p style={{ margin: '4px 0 0', fontSize: 14, color: '#64748B', fontWeight: 400 }}>
+                  {activeProject ? activeProject.description : 'Monitoring and managing active strategic initiatives.'}
+                </p>
+              </div>
+            </div>
+
+            {role === 'ADMIN' && (
+              <button
+                onClick={() => {
+                  setEditingProker(null);
+                  setIsProkerModalOpen(true);
+                }}
+                style={{
+                  background: '#000000', color: '#FFFFFF', border: 'none',
+                  padding: '10px 20px', borderRadius: 8, fontSize: 13, fontWeight: 700,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)'
+                }}
+              >
+                <Plus size={16} />
+                <span>Tambah Program Baru</span>
+              </button>
+            )}
+          </div>
+
+          {/* 3 Summary KPI Metric Cards Row */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 28 }}>
+            
+            {/* Card 1: TOTAL PROGRAM */}
+            <div style={{
+              background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 14,
+              padding: '20px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)'
+            }} className="kpi-card">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#64748B', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                  TOTAL PROGRAM
+                </span>
+                <div style={{
+                  width: 30, height: 30, borderRadius: 8, border: '1px solid #DBEAFE',
+                  background: '#EFF6FF', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                  <BarChart3 size={16} />
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                <span style={{ fontSize: 36, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                  {stats.totalProker}
+                </span>
+                <span style={{
+                  fontSize: 12, fontWeight: 700, color: '#2563EB',
+                  display: 'inline-flex', alignItems: 'center', gap: 3
+                }}>
+                  <TrendingUp size={13} /> {stats.overallProgress}% Overall
+                </span>
+              </div>
+            </div>
+
+            {/* Card 2: SEDANG BERJALAN */}
+            <div style={{
+              background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 14,
+              padding: '20px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)'
+            }} className="kpi-card">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#64748B', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                  SEDANG BERJALAN
+                </span>
+                <div style={{
+                  width: 30, height: 30, borderRadius: 8, border: '1px solid #FEF3C7',
+                  background: '#FFFBEB', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                  <RefreshCw size={16} />
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                <span style={{ fontSize: 36, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                  {stats.inProgressCount}
+                </span>
+                <span style={{ fontSize: 13, color: '#64748B', fontWeight: 600 }}>
+                  Programs active
+                </span>
+              </div>
+            </div>
+
+            {/* Card 3: SELESAI */}
+            <div style={{
+              background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 14,
+              padding: '20px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)'
+            }} className="kpi-card">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#64748B', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                  SELESAI
+                </span>
+                <div style={{
+                  width: 30, height: 30, borderRadius: 8, border: '1px solid #DCFCE7',
+                  background: '#F0FDF4', color: '#16A34A', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                  <CheckCircle2 size={16} />
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                <span style={{ fontSize: 36, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                  {stats.completedCount}
+                </span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: '#16A34A' }}>
+                  Goal Reached
+                </span>
+              </div>
+            </div>
+
+          </div>
+
           {/* Projects Overview Table (Displayed when "Semua Projek" is selected) */}
           {activeProjectId === 'ALL' && (
             <ProjectsOverview
@@ -445,6 +618,7 @@ export default function App() {
               setIsProkerModalOpen(true);
             }}
             projects={projects}
+            activeProjectId={activeProjectId}
           />
 
         </div>
@@ -481,6 +655,8 @@ export default function App() {
         isOpen={isMilestoneModalOpen}
         onClose={() => setIsMilestoneModalOpen(false)}
         onAddMilestone={handleAddMilestoneColumn}
+        onUpdateMilestone={handleUpdateMilestoneColumn}
+        onDeleteMilestone={handleDeleteMilestoneColumn}
         existingMilestones={dynamicMilestones}
       />
 

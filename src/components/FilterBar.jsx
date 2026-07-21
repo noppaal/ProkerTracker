@@ -18,25 +18,25 @@ export const FilterBar = ({
   const hasFilter = !!searchQuery || priorityFilter !== 'ALL' || statusFilter !== 'ALL';
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
+    <div style={{ display: 'flex', itemsAlign: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
       
       {/* Search Input */}
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 7,
-        background: '#F7F7F5', border: '1px solid #EAEAE8', borderRadius: 7,
-        padding: '6px 10px', flex: '1 1 180px',
+        display: 'flex', alignItems: 'center', gap: 8,
+        background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 8,
+        padding: '7px 12px', flex: '1 1 200px', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)'
       }}>
-        <Search size={13} color="#C1C0BB" style={{ flexShrink: 0 }} />
+        <Search size={14} color="#94A3B8" style={{ flexShrink: 0 }} />
         <input
           type="text" 
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
-          placeholder="Cari proker atau sub-item..."
-          style={{ flex: 1, border: 'none', background: 'none', fontSize: 13, color: '#1C1917', outline: 'none', minWidth: 0 }}
+          placeholder="Cari program kerja atau sub-item..."
+          style={{ flex: 1, border: 'none', background: 'none', fontSize: 13, color: '#0F172A', outline: 'none', minWidth: 0 }}
         />
         {searchQuery && (
-          <button onClick={() => setSearchQuery('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#C1C0BB', padding: 0, display: 'flex' }}>
-            <X size={12} />
+          <button onClick={() => setSearchQuery('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: 0, display: 'flex' }}>
+            <X size={13} />
           </button>
         )}
       </div>
@@ -46,16 +46,17 @@ export const FilterBar = ({
         value={priorityFilter}
         onChange={e => setPriorityFilter(e.target.value)}
         style={{
-          fontSize: 13, color: '#6B6B68', border: '1px solid #EAEAE8',
-          background: '#F7F7F5', padding: '6px 10px', borderRadius: 7,
-          fontFamily: 'inherit', cursor: 'pointer',
+          fontSize: 13, color: '#475569', border: '1px solid #E2E8F0',
+          background: '#FFFFFF', padding: '7px 12px', borderRadius: 8,
+          fontFamily: 'inherit', cursor: 'pointer', fontWeight: 500,
+          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)'
         }}
       >
-        <option value="ALL">Semua prioritas</option>
-        <option value="P1">P1 Urgent</option>
-        <option value="P2">P2 High</option>
-        <option value="P3">P3 Medium</option>
-        <option value="P4">P4 Low</option>
+        <option value="ALL">Semua Prioritas</option>
+        <option value="P1">URGENT (P1)</option>
+        <option value="P2">TINGGI (P2)</option>
+        <option value="P3">SEDANG (P3)</option>
+        <option value="P4">RENDAH (P4)</option>
       </select>
 
       {/* Status Dropdown */}
@@ -63,12 +64,13 @@ export const FilterBar = ({
         value={statusFilter}
         onChange={e => setStatusFilter(e.target.value)}
         style={{
-          fontSize: 13, color: '#6B6B68', border: '1px solid #EAEAE8',
-          background: '#F7F7F5', padding: '6px 10px', borderRadius: 7,
-          fontFamily: 'inherit', cursor: 'pointer',
+          fontSize: 13, color: '#475569', border: '1px solid #E2E8F0',
+          background: '#FFFFFF', padding: '7px 12px', borderRadius: 8,
+          fontFamily: 'inherit', cursor: 'pointer', fontWeight: 500,
+          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)'
         }}
       >
-        <option value="ALL">Semua status</option>
+        <option value="ALL">Semua Status</option>
         <option value="Done">Done</option>
         <option value="In Progress">In Progress</option>
         <option value="Hold">Hold</option>
@@ -81,12 +83,12 @@ export const FilterBar = ({
         <button
           onClick={() => { setSearchQuery(''); setPriorityFilter('ALL'); setStatusFilter('ALL'); }}
           style={{
-            fontSize: 12, color: '#9B9A97', background: 'none',
-            border: 'none', padding: '6px 4px', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: 4,
+            fontSize: 12, color: '#64748B', background: '#F1F5F9',
+            border: '1px solid #E2E8F0', padding: '7px 10px', borderRadius: 8, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: 4, fontWeight: 600
           }}
         >
-          <X size={12} /> Reset
+          <X size={13} /> Reset
         </button>
       )}
 
@@ -96,14 +98,14 @@ export const FilterBar = ({
       <button
         onClick={toggleExpandAll}
         style={{
-          fontSize: 12, color: '#9B9A97', background: 'none',
-          border: 'none', padding: '6px 8px', borderRadius: 6, cursor: 'pointer',
-          display: 'flex', alignItems: 'center', gap: 4,
+          fontSize: 13, color: '#64748B', background: '#FFFFFF',
+          border: '1px solid #E2E8F0', padding: '7px 12px', borderRadius: 8, cursor: 'pointer',
+          display: 'flex', alignItems: 'center', gap: 6, fontWeight: 500,
+          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)'
         }}
-        className="nav-item"
       >
-        <ChevronRight size={12} style={{ transform: isExpandAll ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }} />
-        {isExpandAll ? 'Tutup semua' : 'Buka semua'}
+        <ChevronRight size={13} style={{ transform: isExpandAll ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }} />
+        {isExpandAll ? 'Tutup Semua Sub' : 'Buka Semua Sub'}
       </button>
 
       {/* Add Milestone Column CTA */}
@@ -111,26 +113,13 @@ export const FilterBar = ({
         <button
           onClick={onOpenAddMilestone}
           style={{
-            fontSize: 12, color: '#78716C', background: '#F5F5F4',
-            border: '1px solid #E7E5E4', padding: '6px 10px', borderRadius: 7, cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: 4,
+            fontSize: 13, color: '#0F172A', background: '#FFFFFF',
+            border: '1px solid #E2E8F0', padding: '7px 12px', borderRadius: 8, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600,
+            boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)'
           }}
         >
           + Kolom Milestone
-        </button>
-      )}
-
-      {/* Add Proker CTA Button */}
-      {isAdmin && (
-        <button 
-          onClick={onOpenAddProker}
-          style={{
-            fontSize: 13, fontWeight: 500, color: '#fff', background: '#0F766E',
-            border: 'none', padding: '7px 12px', borderRadius: 7, cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: 5,
-          }}
-        >
-          <Plus size={13} /> Proker Baru
         </button>
       )}
 

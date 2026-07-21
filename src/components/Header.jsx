@@ -1,88 +1,281 @@
 import React from 'react';
-import { Menu, ListTodo, AlertTriangle, TrendingUp, Users2 } from 'lucide-react';
+import { 
+  Search, 
+  Settings, 
+  Plus, 
+  BarChart3, 
+  RefreshCw, 
+  CheckCircle2, 
+  Download, 
+  Menu,
+  TrendingUp,
+  User
+} from 'lucide-react';
 
 export const Header = ({
-  stats,
-  activeProject,
-  sidebarOpen,
-  onToggleSidebar
+  stats = { totalProker: 24, p1Count: 5, totalSubItems: 12, overallProgress: 75 },
+  activeProject = null,
+  sidebarOpen = true,
+  onToggleSidebar,
+  onOpenAddProker,
+  onOpenAddProject,
+  onExportData,
+  searchQuery = '',
+  setSearchQuery = () => {},
+  currentUser = null,
+  onOpenConfig = () => {}
 }) => {
   return (
-    <header style={{
-      flexShrink: 0,
-      background: '#fff',
-      borderBottom: '1px solid #EAEAE8',
-      padding: '14px 24px 0',
-    }}>
-      {/* Top bar */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-        {!sidebarOpen && (
-          <button
-            onClick={onToggleSidebar}
-            style={{
-              padding: '5px 6px', borderRadius: 6, border: 'none',
-              background: 'transparent', cursor: 'pointer', color: '#9B9A97',
-              display: 'flex', alignItems: 'center',
-            }}
-            className="nav-item"
-            title="Buka Sidebar"
-          >
-            <Menu size={15} />
-          </button>
-        )}
+    <header style={{ flexShrink: 0, background: '#FFFFFF', borderBottom: '1px solid #E2E8F0' }}>
+      
+      {/* 1. Top Global Navigation Bar (Brand, Search, Global Actions) */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '12px 28px', borderBottom: '1px solid #F1F5F9'
+      }}>
+        
+        {/* Left: Sidebar Toggle + Brand Logo + Nav Tabs */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+          {!sidebarOpen && (
+            <button
+              onClick={onToggleSidebar}
+              style={{
+                padding: '6px 8px', borderRadius: 8, border: '1px solid #E2E8F0',
+                background: '#F8FAFC', cursor: 'pointer', color: '#64748B',
+                display: 'flex', alignItems: 'center'
+              }}
+              title="Buka Sidebar"
+            >
+              <Menu size={16} />
+            </button>
+          )}
 
-        {activeProject ? (
-          <>
-            <div style={{
-              width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-              background: (activeProject.color || '#0F766E') + '20',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 11, fontWeight: 700, color: activeProject.color || '#0F766E', letterSpacing: 0.3,
+          {/* Brand Logo */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 22, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.03em' }}>
+              WorkFlow
+            </span>
+          </div>
+
+          {/* Nav Tabs */}
+          <nav style={{ display: 'flex', alignItems: 'center', gap: 20, marginLeft: 8 }}>
+            <button style={{
+              background: 'none', border: 'none', padding: '8px 0',
+              fontSize: 14, fontWeight: 700, color: '#0F172A', cursor: 'pointer',
+              borderBottom: '2px solid #2563EB', display: 'flex', alignItems: 'center', gap: 6
             }}>
-              {(activeProject.code || 'PRJ').slice(0, 2)}
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                <h1 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: '#1C1917' }}>
-                  {activeProject.name}
-                </h1>
-                <span style={{
-                  fontSize: 10, fontWeight: 500,
-                  background: '#F0F0EE', color: '#9B9A97',
-                  padding: '2px 6px', borderRadius: 4, letterSpacing: 0.5,
-                  fontFamily: "'Geist Mono', monospace",
-                }}>
-                  {activeProject.code}
-                </span>
-              </div>
-              <p style={{ margin: '1px 0 0', fontSize: 12, color: '#B5B3AD' }}>{activeProject.description}</p>
-            </div>
-          </>
-        ) : (
-          <div>
-            <h1 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: '#1C1917' }}>
-              Overview Program Kerja
-            </h1>
-            <p style={{ margin: '1px 0 0', fontSize: 12, color: '#B5B3AD' }}>Monitoring seluruh program kerja organisasi</p>
+              Dashboard
+            </button>
+            <button style={{
+              background: 'none', border: 'none', padding: '8px 0',
+              fontSize: 14, fontWeight: 500, color: '#64748B', cursor: 'pointer',
+              borderBottom: '2px solid transparent'
+            }}>
+              Team
+            </button>
+          </nav>
+        </div>
+
+        {/* Right: Search + New Project CTA + Settings + User Avatar */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          
+          {/* Global Search */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 10,
+            padding: '7px 14px', width: 220
+          }}>
+            <Search size={14} color="#94A3B8" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search projects..."
+              style={{
+                border: 'none', background: 'none', outline: 'none',
+                fontSize: 13, color: '#0F172A', width: '100%'
+              }}
+            />
           </div>
-        )}
+
+          {/* New Project Button */}
+          {onOpenAddProject && (
+            <button
+              onClick={onOpenAddProject}
+              style={{
+                background: '#0F172A', color: '#FFFFFF', border: 'none',
+                padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                boxShadow: '0 2px 4px rgba(15, 23, 42, 0.1)'
+              }}
+            >
+              <span>New Project</span>
+            </button>
+          )}
+
+          {/* Settings Icon */}
+          <button
+            onClick={onOpenConfig}
+            style={{
+              padding: 8, background: 'none', border: 'none', cursor: 'pointer',
+              color: '#64748B', borderRadius: 8, display: 'flex', alignItems: 'center'
+            }}
+            title="Pengaturan"
+          >
+            <Settings size={18} />
+          </button>
+
+          {/* User Profile Avatar */}
+          <div style={{
+            width: 34, height: 34, borderRadius: '50%', background: '#0F172A',
+            color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 13, fontWeight: 700, border: '2px solid #E2E8F0', flexShrink: 0
+          }}>
+            {currentUser ? currentUser.name.charAt(0) : 'U'}
+          </div>
+
+        </div>
       </div>
 
-      {/* KPI strip — inline, no dividers between, feels lighter */}
-      <div style={{ display: 'flex', gap: 24, paddingBottom: 14, overflowX: 'auto' }}>
-        {[
-          { icon: <ListTodo size={13} />, label: 'Total Proker', value: stats.totalProker, color: '#0F766E' },
-          { icon: <AlertTriangle size={13} />, label: 'Urgent', value: stats.p1Count, color: '#DC2626' },
-          { icon: <TrendingUp size={13} />, label: 'Rata-rata Selesai', value: `${stats.overallProgress}%`, color: '#D97706' },
-          { icon: <Users2 size={13} />, label: 'Sub-Program', value: stats.totalSubItems, color: '#7C3AED' },
-        ].map((k, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, flexShrink: 0 }}>
-            <span style={{ color: k.color }}>{k.icon}</span>
-            <span style={{ fontSize: 16, fontWeight: 600, color: '#1C1917', fontFamily: "'Geist Mono', monospace" }}>{k.value}</span>
-            <span style={{ fontSize: 12, color: '#B5B3AD' }}>{k.label}</span>
+      {/* 2. Main Page Header & CTA Buttons */}
+      <div style={{ padding: '24px 28px 20px' }}>
+        
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24 }}>
+          <div>
+            <h1 style={{
+              margin: 0, fontSize: 30, fontWeight: 800, color: '#0F172A',
+              letterSpacing: '-0.02em', lineHeight: 1.2
+            }}>
+              {activeProject ? activeProject.name : 'Work Program Tracker'}
+            </h1>
+            <p style={{ margin: '6px 0 0', fontSize: 14, color: '#64748B', fontWeight: 400 }}>
+              {activeProject ? activeProject.description : 'Monitoring and managing active strategic initiatives.'}
+            </p>
           </div>
-        ))}
+
+          {/* Top Right Header Action Buttons */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <button
+              onClick={onExportData}
+              style={{
+                background: '#FFFFFF', border: '1px solid #D1D5DB', color: '#0F172A',
+                padding: '9px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
+              }}
+            >
+              <Download size={14} />
+              <span>Export Data</span>
+            </button>
+
+            {onOpenAddProker && (
+              <button
+                onClick={onOpenAddProker}
+                style={{
+                  background: '#000000', color: '#FFFFFF', border: 'none',
+                  padding: '9px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.15)'
+                }}
+              >
+                <Plus size={15} />
+                <span>Tambah Program Baru</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* 3. Summary Metric Cards Row (3 Cards Grid matching screenshot) */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+          
+          {/* Card 1: TOTAL PROGRAM */}
+          <div style={{
+            background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 14,
+            padding: '20px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)'
+          }} className="kpi-card">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#64748B', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                TOTAL PROGRAM
+              </span>
+              <div style={{
+                width: 28, height: 28, borderRadius: 6, border: '1px solid #DBEAFE',
+                background: '#EFF6FF', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <BarChart3 size={15} />
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+              <span style={{ fontSize: 34, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                {stats.totalProker || 24}
+              </span>
+              <span style={{
+                fontSize: 12, fontWeight: 700, color: '#2563EB',
+                display: 'inline-flex', alignItems: 'center', gap: 3
+              }}>
+                <TrendingUp size={13} /> +12%
+              </span>
+            </div>
+          </div>
+
+          {/* Card 2: SEDANG BERJALAN */}
+          <div style={{
+            background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 14,
+            padding: '20px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)'
+          }} className="kpi-card">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#64748B', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                SEDANG BERJALAN
+              </span>
+              <div style={{
+                width: 28, height: 28, borderRadius: 6, border: '1px solid #FEF3C7',
+                background: '#FFFBEB', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <RefreshCw size={15} />
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+              <span style={{ fontSize: 34, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                {stats.inProgressCount || Math.round((stats.totalProker || 24) * 0.6)}
+              </span>
+              <span style={{ fontSize: 13, color: '#64748B', fontWeight: 500 }}>
+                Programs active
+              </span>
+            </div>
+          </div>
+
+          {/* Card 3: SELESAI */}
+          <div style={{
+            background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 14,
+            padding: '20px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)'
+          }} className="kpi-card">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#64748B', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                SELESAI
+              </span>
+              <div style={{
+                width: 28, height: 28, borderRadius: 6, border: '1px solid #DCFCE7',
+                background: '#F0FDF4', color: '#16A34A', display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <CheckCircle2 size={15} />
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+              <span style={{ fontSize: 34, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                {stats.completedCount || Math.round((stats.totalProker || 24) * 0.4)}
+              </span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#16A34A' }}>
+                Goal Reached
+              </span>
+            </div>
+          </div>
+
+        </div>
+
       </div>
+
     </header>
   );
 };

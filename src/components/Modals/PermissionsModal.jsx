@@ -10,75 +10,75 @@ export const PermissionsModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-2xs">
-      <div className="bg-white w-full max-w-2xl rounded-xl border border-[#E9E9E7] shadow-lg overflow-hidden text-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+      <div className="bg-white w-full max-w-2xl rounded-2xl border border-slate-200 shadow-2xl overflow-hidden text-xs">
         
         {/* Header */}
-        <div className="p-3 bg-[#F7F6F3] border-b border-[#E9E9E7] flex items-center justify-between">
+        <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Shield className="w-4 h-4 text-[#D9730D]" />
-            <h2 className="font-bold text-[#37352F]">Matriks Hak Akses (RBAC Matrix)</h2>
+            <Shield className="w-4 h-4 text-amber-400" />
+            <h2 className="font-bold text-sm">Matriks Hak Akses (RBAC Matrix)</h2>
           </div>
-          <button onClick={onClose} className="p-1 rounded hover:bg-[#E9E9E7] text-[#787774]">
+          <button onClick={onClose} className="p-1 rounded hover:bg-slate-800 text-slate-400">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
+        <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
           
-          <div className="p-3 bg-[#F7F6F3] rounded-lg border border-[#E9E9E7] flex items-center justify-between">
+          <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-[#37352F]">Role Akun Saat Ini:</span>
-              <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${
-                currentRole === 'ADMIN' ? 'bg-[#FBF3DB] text-[#D9730D]' : 'bg-[#E8F3F6] text-[#2E75D4]'
+              <span className="font-bold text-slate-900 text-xs">Role Akun Saat Ini:</span>
+              <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                currentRole === 'ADMIN' ? 'bg-amber-100 text-amber-900' : 'bg-blue-100 text-blue-900'
               }`}>
                 {currentRole === 'ADMIN' ? 'ADMIN' : 'MEMBER'}
               </span>
             </div>
           </div>
 
-          <div className="border border-[#E9E9E7] rounded-lg overflow-hidden">
+          <div className="border border-slate-200 rounded-xl overflow-hidden shadow-xs">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-[#F7F6F3] border-b border-[#E9E9E7] text-[11px] text-[#787774] font-bold">
-                  <th className="py-2.5 px-3">Fitur / Operasi Sistem</th>
-                  <th className="py-2.5 px-3 text-center w-28 bg-[#FBF3DB]/60 text-[#D9730D]">
+                <tr className="bg-slate-50 border-b border-slate-200 text-xs text-slate-600 font-bold">
+                  <th className="py-3 px-4">Fitur / Operasi Sistem</th>
+                  <th className="py-3 px-4 text-center w-28 bg-amber-500/10 text-amber-900 font-bold">
                     <div className="flex items-center justify-center gap-1">
-                      <Shield className="w-3 h-3" />
+                      <Shield className="w-3.5 h-3.5 text-amber-600" />
                       <span>ADMIN</span>
                     </div>
                   </th>
-                  <th className="py-2.5 px-3 text-center w-28 bg-[#E8F3F6]/60 text-[#2E75D4]">
+                  <th className="py-3 px-4 text-center w-28 bg-blue-500/10 text-blue-900 font-bold">
                     <div className="flex items-center justify-center gap-1">
-                      <Users className="w-3 h-3" />
+                      <Users className="w-3.5 h-3.5 text-blue-600" />
                       <span>MEMBER</span>
                     </div>
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#EEEEEC] text-[11px]">
+              <tbody className="divide-y divide-slate-200 text-xs">
                 {PERMISSIONS_MATRIX.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-[#F7F6F3]/50">
-                    <td className="py-2 px-3 font-medium text-[#37352F]">
+                  <tr key={idx} className="hover:bg-slate-50/70">
+                    <td className="py-2.5 px-4 font-semibold text-slate-900">
                       {item.feature}
                     </td>
                     
                     {/* Admin Access */}
-                    <td className="py-2 px-3 text-center bg-[#FBF3DB]/20">
+                    <td className="py-2.5 px-4 text-center bg-amber-500/5">
                       {item.admin ? (
-                        <CheckCircle className="w-4 h-4 text-[#448361] mx-auto" />
+                        <CheckCircle className="w-4 h-4 text-emerald-600 mx-auto" />
                       ) : (
-                        <Lock className="w-3.5 h-3.5 text-[#9B9A97] mx-auto" />
+                        <Lock className="w-3.5 h-3.5 text-slate-400 mx-auto" />
                       )}
                     </td>
 
                     {/* Member Access */}
-                    <td className="py-2 px-3 text-center bg-[#E8F3F6]/20">
+                    <td className="py-2.5 px-4 text-center bg-blue-500/5">
                       {item.member ? (
-                        <CheckCircle className="w-4 h-4 text-[#448361] mx-auto" />
+                        <CheckCircle className="w-4 h-4 text-emerald-600 mx-auto" />
                       ) : (
-                        <Lock className="w-3.5 h-3.5 text-[#C4554D] mx-auto" />
+                        <Lock className="w-3.5 h-3.5 text-rose-500 mx-auto" />
                       )}
                     </td>
                   </tr>
@@ -89,10 +89,10 @@ export const PermissionsModal = ({
 
         </div>
 
-        <div className="p-3 bg-[#F7F6F3] border-t border-[#E9E9E7] flex justify-end">
+        <div className="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-[#2383E2] hover:bg-[#1D74C9] text-white font-bold"
+            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md shadow-blue-500/20"
           >
             Tutup Matriks
           </button>

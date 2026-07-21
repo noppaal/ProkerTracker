@@ -120,9 +120,14 @@ export const saveProkerData = async (data, endpointUrl) => {
 };
 
 /**
- * FIX FLAG PROGRESS CALCULATION LOGIC:
+ * REFINED PROGRESS CALCULATION LOGIC:
  * Calculates milestone completion percentage for a Sub-Proker.
- * When a sub-proker is newly created, milestones default to 0% (Not Yet), NOT 100%!
+ * Handles milestone statuses accurately:
+ * - 'Done': 1.0 (100%)
+ * - 'In Progress': 0.5 (50%)
+ * - 'Hold': 0.25 (25%)
+ * - 'Not Yet' / 'Cancel': 0.0 (0%)
+ * - 'Tidak ada Link Terkait' / 'Tidak ada Mockup': Excluded from total calculation.
  */
 export const calculateSubProkerProgress = (subItem, dynamicMilestones = []) => {
   if (!subItem || !dynamicMilestones || dynamicMilestones.length === 0) return 0;
@@ -134,11 +139,10 @@ export const calculateSubProkerProgress = (subItem, dynamicMilestones = []) => {
     const milestoneData = subItem.milestones ? subItem.milestones[m.id] : null;
     const status = milestoneData ? milestoneData.status : 'Not Yet';
 
-    // Exclude milestones that are explicitly marked as inapplicable
     if (status !== 'Tidak ada Link Terkait' && status !== 'Tidak ada Mockup') {
       totalApplicableMilestones++;
       if (status === 'Done') {
-        totalCompletedScore += 1;
+        totalCompletedScore += 1.0;
       } else if (status === 'In Progress') {
         totalCompletedScore += 0.5;
       } else if (status === 'Hold') {
@@ -151,6 +155,9 @@ export const calculateSubProkerProgress = (subItem, dynamicMilestones = []) => {
   return Math.round((totalCompletedScore / totalApplicableMilestones) * 100);
 };
 
+/**
+ * Calculates average progress percentage for a Master Proker across all its Sub-Items.
+ */
 export const calculateMasterProkerProgress = (masterProker, dynamicMilestones = []) => {
   if (!masterProker || !masterProker.subItems || masterProker.subItems.length === 0) return 0;
 

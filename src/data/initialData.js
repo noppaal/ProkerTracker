@@ -17,9 +17,9 @@ export const STATUS_OPTIONS = [
 
 export const PRIORITY_OPTIONS = [
   { value: 'P1', label: 'P1 - Urgent', color: 'bg-rose-100 text-rose-800 border-rose-300 font-bold', rank: 1 },
-  { value: 'P2', label: 'P2 - High', color: 'bg-amber-100 text-amber-800 border-amber-300 font-semibold', rank: 2 },
-  { value: 'P3', label: 'P3 - Medium', color: 'bg-blue-100 text-blue-800 border-blue-300 font-medium', rank: 3 },
-  { value: 'P4', label: 'P4 - Low', color: 'bg-slate-100 text-slate-700 border-slate-300 font-medium', rank: 4 }
+  { value: 'P2', label: 'P2 - Tinggi', color: 'bg-orange-100 text-orange-800 border-orange-300 font-semibold', rank: 2 },
+  { value: 'P3', label: 'P3 - Sedang', color: 'bg-amber-100 text-amber-800 border-amber-300 font-medium', rank: 3 },
+  { value: 'P4', label: 'P4 - Rendah', color: 'bg-blue-100 text-blue-800 border-blue-300 font-medium', rank: 4 }
 ];
 
 // Pre-seeded demo user accounts with simplified ADMIN / MEMBER roles

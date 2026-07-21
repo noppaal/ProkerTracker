@@ -62,48 +62,48 @@ export const AppsScriptConfigModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-2xs">
-      <div className="bg-white w-full max-w-xl rounded-xl border border-[#E9E9E7] shadow-lg overflow-hidden text-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+      <div className="bg-white w-full max-w-xl rounded-2xl border border-slate-200 shadow-2xl overflow-hidden text-xs">
         
         {/* Header */}
-        <div className="p-3 bg-[#F7F6F3] border-b border-[#E9E9E7] flex items-center justify-between">
+        <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-[#787774]" />
-            <h2 className="font-bold text-[#37352F]">Google Sheets API Konfigurasi</h2>
+            <Database className="w-4 h-4 text-blue-400" />
+            <h2 className="font-bold text-sm">Google Sheets API Konfigurasi</h2>
           </div>
-          <button onClick={onClose} className="p-1 rounded hover:bg-[#E9E9E7] text-[#787774]">
+          <button onClick={onClose} className="p-1 rounded hover:bg-slate-800 text-slate-400">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Tab Header */}
-        <div className="flex border-b border-[#E9E9E7] bg-[#F7F6F3] px-3">
+        <div className="flex border-b border-slate-200 bg-slate-50 px-3">
           <button
             onClick={() => setActiveTab('config')}
-            className={`px-3 py-2 text-xs font-bold border-b-2 transition-all ${
+            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all ${
               activeTab === 'config'
-                ? 'border-[#2383E2] text-[#2383E2]'
-                : 'border-transparent text-[#787774] hover:text-[#37352F]'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             Connection Endpoint
           </button>
           <button
             onClick={() => setActiveTab('code')}
-            className={`px-3 py-2 text-xs font-bold border-b-2 transition-all ${
+            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all ${
               activeTab === 'code'
-                ? 'border-[#2383E2] text-[#2383E2]'
-                : 'border-transparent text-[#787774] hover:text-[#37352F]'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             Backend Code (Code.gs)
           </button>
           <button
             onClick={() => setActiveTab('instructions')}
-            className={`px-3 py-2 text-xs font-bold border-b-2 transition-all ${
+            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all ${
               activeTab === 'instructions'
-                ? 'border-[#2383E2] text-[#2383E2]'
-                : 'border-transparent text-[#787774] hover:text-[#37352F]'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             Panduan Deploy
@@ -111,12 +111,12 @@ export const AppsScriptConfigModal = ({
         </div>
 
         {/* Content */}
-        <div className="p-4 max-h-[65vh] overflow-y-auto space-y-4">
+        <div className="p-5 max-h-[65vh] overflow-y-auto space-y-4">
           
           {activeTab === 'config' && (
             <div className="space-y-3">
               <div>
-                <label className="block text-[11px] font-bold text-[#787774] mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Google Apps Script Web App URL Endpoint *
                 </label>
                 <input
@@ -124,7 +124,7 @@ export const AppsScriptConfigModal = ({
                   value={endpointUrl}
                   onChange={(e) => setEndpointUrl(e.target.value)}
                   placeholder="https://script.google.com/macros/s/AKfycb.../exec"
-                  className="w-full bg-[#F7F6F3] border border-[#E9E9E7] text-[#37352F] text-xs font-mono rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#2383E2]"
+                  className="w-full bg-slate-50 border border-slate-300 text-slate-900 text-xs font-mono rounded-xl px-3 py-2 focus:outline-none focus:border-blue-600 focus:bg-white"
                 />
               </div>
 
@@ -133,18 +133,18 @@ export const AppsScriptConfigModal = ({
                   type="button"
                   onClick={handleTestConnection}
                   disabled={isTesting}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F7F6F3] border border-[#E9E9E7] text-[#37352F] font-semibold hover:bg-[#EFEEEC]"
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-300 text-slate-800 font-semibold hover:bg-slate-200"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 ${isTesting ? 'animate-spin text-[#2383E2]' : ''}`} />
+                  <RefreshCw className={`w-3.5 h-3.5 ${isTesting ? 'animate-spin text-blue-600' : ''}`} />
                   <span>{isTesting ? 'Testing...' : 'Uji Koneksi'}</span>
                 </button>
               </div>
 
               {testResult && (
-                <div className={`p-2.5 rounded-lg text-xs border flex items-start gap-2 ${
+                <div className={`p-3 rounded-xl text-xs border flex items-start gap-2 ${
                   testResult.status === 'success'
-                    ? 'bg-[#EDF3EC] text-[#448361] border-emerald-200 font-bold'
-                    : 'bg-[#FDEBEC] text-[#C4554D] border-rose-200 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold'
+                    : 'bg-rose-50 text-rose-800 border-rose-200 font-semibold'
                 }`}>
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                   <span>{testResult.message}</span>
@@ -156,31 +156,31 @@ export const AppsScriptConfigModal = ({
           {activeTab === 'code' && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-[11px] text-[#787774] font-bold">Code.gs</span>
+                <span className="font-mono text-xs text-slate-600 font-bold">Code.gs</span>
                 <button
                   onClick={handleCopyCode}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#2383E2] text-white text-[11px] font-bold"
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-bold shadow-md shadow-blue-500/20"
                 >
-                  {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                  {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copied ? 'Tersalin!' : 'Salin Kode'}</span>
                 </button>
               </div>
-              <pre className="p-3 rounded-lg bg-[#191919] text-[#E3E2E0] font-mono text-[11px] overflow-x-auto max-h-60 leading-relaxed">
+              <pre className="p-3.5 rounded-xl bg-slate-900 text-slate-200 font-mono text-[11px] overflow-x-auto max-h-60 leading-relaxed">
                 {GOOGLE_APPS_SCRIPT_CODE}
               </pre>
             </div>
           )}
 
           {activeTab === 'instructions' && (
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {SETUP_INSTRUCTIONS.map(item => (
-                <div key={item.step} className="p-2.5 bg-[#F7F6F3] border border-[#E9E9E7] rounded-lg flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-[#2383E2] text-white font-bold flex items-center justify-center shrink-0 text-[10px]">
+                <div key={item.step} className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center shrink-0 text-xs">
                     {item.step}
                   </span>
                   <div>
-                    <h4 className="font-bold text-[#37352F]">{item.title}</h4>
-                    <p className="text-[#787774] text-[11px]">{item.desc}</p>
+                    <h4 className="font-bold text-slate-900 text-xs">{item.title}</h4>
+                    <p className="text-slate-600 text-[11px] mt-0.5">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -189,18 +189,18 @@ export const AppsScriptConfigModal = ({
 
         </div>
 
-        <div className="p-3 bg-[#F7F6F3] border-t border-[#E9E9E7] flex items-center justify-end gap-2">
+        <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2">
           <button
             type="button"
             onClick={onClose}
-            className="px-3.5 py-1.5 rounded-lg bg-white border border-[#E9E9E7] text-[#37352F] font-semibold hover:bg-[#EFEEEC]"
+            className="px-4 py-2 rounded-xl bg-white border border-slate-300 text-slate-700 font-semibold hover:bg-slate-100"
           >
             Tutup
           </button>
           <button
             type="button"
             onClick={handleSave}
-            className="px-4 py-1.5 rounded-lg bg-[#2383E2] hover:bg-[#1D74C9] text-white font-bold shadow-2xs"
+            className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md shadow-blue-500/20"
           >
             Simpan Endpoint
           </button>

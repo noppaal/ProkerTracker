@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { X, PlusCircle, Check } from 'lucide-react';
+import { X, Sliders, Edit2, Trash2 } from 'lucide-react';
 
 export const DynamicMilestoneModal = ({
   isOpen,
   onClose,
   onAddMilestone,
+  onUpdateMilestone,
+  onDeleteMilestone,
   existingMilestones = []
 }) => {
   const [milestoneName, setMilestoneName] = useState('');
+  const [milestoneCode, setMilestoneCode] = useState('');
+  const [editingMilestoneId, setEditingMilestoneId] = useState(null);
 
   if (!isOpen) return null;
 
@@ -19,71 +23,185 @@ export const DynamicMilestoneModal = ({
     }
 
     const cleanName = milestoneName.trim();
-    const id = `m_${cleanName.toLowerCase().replace(/[^a-z0-9]/g, '_')}_${Date.now()}`;
-    const code = cleanName.substring(0, 6).toUpperCase();
+    const cleanCode = milestoneCode.trim() ? milestoneCode.trim().toUpperCase() : cleanName.substring(0, 6).toUpperCase();
 
-    onAddMilestone({ id, name: cleanName, code });
+    if (editingMilestoneId) {
+      onUpdateMilestone({
+        id: editingMilestoneId,
+        name: cleanName,
+        code: cleanCode
+      });
+      setEditingMilestoneId(null);
+    } else {
+      const id = `m_${cleanName.toLowerCase().replace(/[^a-z0-9]/g, '_')}_${Date.now()}`;
+      onAddMilestone({ id, name: cleanName, code: cleanCode });
+    }
+
     setMilestoneName('');
-    onClose();
+    setMilestoneCode('');
+  };
+
+  const startEdit = (m) => {
+    setEditingMilestoneId(m.id);
+    setMilestoneName(m.name || '');
+    setMilestoneCode(m.code || '');
+  };
+
+  const cancelEdit = () => {
+    setEditingMilestoneId(null);
+    setMilestoneName('');
+    setMilestoneCode('');
+  };
+
+  const handleDelete = (m) => {
+    if (window.confirm(`Apakah Anda yakin ingin menghapus kolom milestone "${m.name}"? Data milestone ini pada seluruh sub-program akan dihapus.`)) {
+      onDeleteMilestone(m.id);
+      if (editingMilestoneId === m.id) {
+        cancelEdit();
+      }
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-2xs">
-      <div className="bg-white w-full max-w-md rounded-lg border border-[#E9E9E7] shadow-lg overflow-hidden text-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+      <div className="bg-white w-full max-w-md rounded-2xl border border-slate-200 shadow-2xl overflow-hidden text-xs">
         
-        <div className="p-3 bg-[#F7F6F3] border-b border-[#E9E9E7] flex items-center justify-between">
-          <h2 className="font-semibold text-[#37352F]">Tambah Kolom Milestone</h2>
-          <button onClick={onClose} className="p-1 rounded hover:bg-[#E9E9E7] text-[#787774]">
+        {/* Header */}
+        <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sliders className="w-4 h-4 text-blue-400" />
+            <h2 className="font-bold text-sm">Kelola Kolom Milestone (CRUD)</h2>
+          </div>
+          <button onClick={onClose} className="p-1 rounded hover:bg-slate-800 text-slate-400">
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 space-y-3">
-          <div>
-            <label className="block text-[11px] font-medium text-[#787774] mb-1">
-              Nama Tahapan / Milestone Baru *
-            </label>
-            <input
-              type="text"
-              value={milestoneName}
-              onChange={(e) => setMilestoneName(e.target.value)}
-              placeholder="Contoh: Status Security Audit, Status UAT..."
-              autoFocus
-              required
-              className="w-full bg-[#F7F6F3] border border-[#E9E9E7] text-[#37352F] text-xs rounded px-2.5 py-1.5 focus:outline-none focus:border-[#2383E2]"
-            />
-          </div>
-
-          <div className="pt-2 border-t border-[#E9E9E7]">
-            <label className="block text-[10px] font-medium text-[#9B9A97] uppercase mb-1.5">
-              Milestone Aktif ({existingMilestones.length}):
-            </label>
-            <div className="flex flex-wrap gap-1">
-              {existingMilestones.map(m => (
-                <span key={m.id} className="text-[11px] px-1.5 py-0.5 rounded bg-[#F1F1EF] text-[#37352F] flex items-center gap-1">
-                  <Check className="w-3 h-3 text-[#448361]" />
-                  {m.name}
-                </span>
-              ))}
+        {/* Content */}
+        <div className="p-5 space-y-4 max-h-[75vh] overflow-y-auto">
+          
+          {/* Create / Update Form */}
+          <form onSubmit={handleSubmit} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold text-slate-800">
+                {editingMilestoneId ? 'Edit Milestone & Nama Panggilan' : 'Tambah Milestone Baru'}
+              </label>
+              {editingMilestoneId && (
+                <button
+                  type="button"
+                  onClick={cancelEdit}
+                  className="text-[11px] font-semibold text-rose-600 hover:underline"
+                >
+                  Batal Edit
+                </button>
+              )}
             </div>
+
+            <div className="space-y-2.5">
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">Nama Milestone Utama *</label>
+                <input
+                  type="text"
+                  value={milestoneName}
+                  onChange={(e) => setMilestoneName(e.target.value)}
+                  placeholder="Contoh: Status Security Audit, Status UAT..."
+                  autoFocus
+                  required
+                  className="w-full bg-white border border-slate-300 text-slate-900 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-blue-600"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                  Nama Panggilan / Kode Singkat (muncul di samping namanya)
+                </label>
+                <input
+                  type="text"
+                  value={milestoneCode}
+                  onChange={(e) => setMilestoneCode(e.target.value.toUpperCase())}
+                  placeholder="Contoh: DEV, UREQ, TEST, DEPLOY..."
+                  maxLength={10}
+                  className="w-full bg-white border border-slate-300 font-mono text-slate-900 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-blue-600"
+                />
+              </div>
+            </div>
+
+            <div className="pt-1 flex justify-end">
+              <button
+                type="submit"
+                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20"
+              >
+                {editingMilestoneId ? 'Simpan Perubahan' : '+ Tambah Kolom'}
+              </button>
+            </div>
+          </form>
+
+          {/* List of Active Milestones with Edit & Delete Actions */}
+          <div className="pt-2 border-t border-slate-200">
+            <label className="block text-[11px] font-bold text-slate-500 uppercase mb-2.5">
+              Daftar Milestone Aktif ({existingMilestones.length}):
+            </label>
+
+            {existingMilestones.length === 0 ? (
+              <p className="text-slate-500 text-xs py-2 text-center">Belum ada kolom milestone.</p>
+            ) : (
+              <div className="space-y-2">
+                {existingMilestones.map((m) => (
+                  <div
+                    key={m.id}
+                    className={`p-3 rounded-xl border flex items-center justify-between transition-all ${
+                      editingMilestoneId === m.id
+                        ? 'bg-blue-50 border-blue-400 ring-2 ring-blue-500/20'
+                        : 'bg-white border-slate-200'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="w-2 h-2 rounded-full bg-blue-600 flex-shrink-0" />
+                      <span className="font-bold text-slate-900 text-xs truncate">{m.name}</span>
+                      {m.code && (
+                        <span className="text-[10px] font-mono font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md">
+                          {m.code}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => startEdit(m)}
+                        className="p-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100"
+                        title="Edit Milestone & Nama Panggilan"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(m)}
+                        className="p-1.5 rounded-lg text-slate-600 hover:text-rose-600 hover:bg-rose-50"
+                        title="Hapus Milestone"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="pt-3 border-t border-[#E9E9E7] flex items-center justify-end gap-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-3 py-1.5 rounded bg-[#F7F6F3] border border-[#E9E9E7] text-[#37352F] hover:bg-[#EFEEEC]"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              className="px-3.5 py-1.5 rounded bg-[#2383E2] hover:bg-[#1D74C9] text-white font-medium shadow-2xs"
-            >
-              Tambah Kolom
-            </button>
-          </div>
-        </form>
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-1.5 rounded-xl bg-slate-900 text-white font-bold hover:bg-slate-800"
+          >
+            Tutup
+          </button>
+        </div>
 
       </div>
     </div>

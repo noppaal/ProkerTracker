@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, FolderPlus, Palette } from 'lucide-react';
+import { X, FolderPlus } from 'lucide-react';
 
 const COLOR_OPTIONS = [
   { value: '#2563eb', label: 'Biru (Blue)' },
@@ -56,7 +56,7 @@ export const ProjectModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
       <div className="bg-white w-full max-w-md rounded-2xl border border-slate-200 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header */}
@@ -64,7 +64,7 @@ export const ProjectModal = ({
           <div className="flex items-center gap-2">
             <FolderPlus className="w-5 h-5 text-blue-400" />
             <h2 className="font-bold text-sm">
-              {editingProject ? 'Edit Projek' : 'Buat Projek Baru (Admin)'}
+              {editingProject ? 'Edit Projek' : 'Buat Projek Baru'}
             </h2>
           </div>
           <button onClick={onClose} className="p-1 rounded hover:bg-slate-800 text-slate-400">
@@ -75,7 +75,7 @@ export const ProjectModal = ({
         {/* Content */}
         <form onSubmit={handleSubmit} className="p-5 space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Kode Projek</label>
+            <label className="block font-bold text-slate-700 mb-1">Kode Projek</label>
             <input
               type="text"
               value={code}
@@ -86,7 +86,7 @@ export const ProjectModal = ({
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Nama Projek Utama *</label>
+            <label className="block font-bold text-slate-700 mb-1">Nama Projek Utama *</label>
             <input
               type="text"
               value={name}
@@ -98,7 +98,7 @@ export const ProjectModal = ({
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Warna Akses Logis</label>
+            <label className="block font-bold text-slate-700 mb-1">Warna Akses Logis</label>
             <div className="flex items-center gap-2">
               {COLOR_OPTIONS.map(c => (
                 <button
@@ -114,7 +114,7 @@ export const ProjectModal = ({
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Deskripsi Projek</label>
+            <label className="block font-bold text-slate-700 mb-1">Deskripsi Projek</label>
             <textarea
               rows="2"
               value={description}
