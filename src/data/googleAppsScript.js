@@ -60,14 +60,15 @@ export const SETUP_INSTRUCTIONS = [
 ];
 
 export const PERMISSIONS_MATRIX = [
-  { feature: 'Melihat Seluruh Projek & Proker Utama', admin: true, member: true },
-  { feature: 'Melihat Status Milestone & Target Date', admin: true, member: true },
-  { feature: 'Mengisi / Mengubah Status Milestone', admin: true, member: true },
-  { feature: 'Mengisi Actual Date & Catatan Progress', admin: true, member: true },
-  { feature: 'Membuat / Edit / Hapus Projek Utama', admin: true, member: false },
-  { feature: 'Membuat / Edit / Hapus Program Kerja Utama', admin: true, member: false },
-  { feature: 'Membuat / Edit / Hapus Sub-Program Kerja', admin: true, member: false },
-  { feature: 'Menentukan Skala Prioritas (P1 - P4)', admin: true, member: false },
-  { feature: 'Menambah Kolom Milestone Baru', admin: true, member: false },
-  { feature: 'Mengatur Koneksi Google Sheets API', admin: true, member: false }
+  { feature: 'Melihat Seluruh Projek & Proker Utama', tb: true, it: true, karyawan: true },
+  { feature: 'Melihat Status Milestone & Target Date', tb: true, it: true, karyawan: true },
+  { feature: 'Mengisi / Mengedit Catatan Sub-Program', tb: true, it: true, karyawan: true },
+  { feature: 'Mengupdate Status Development & Deployment', tb: true, it: true, karyawan: false },
+  { feature: 'Mengupdate Seluruh Status Milestone (Ureq, Mockup, Test, dll)', tb: true, it: false, karyawan: false },
+  { feature: 'Membuat / Edit / Hapus Projek Utama', tb: true, it: false, karyawan: false },
+  { feature: 'Membuat / Edit / Hapus Program Kerja Utama', tb: true, it: false, karyawan: false },
+  { feature: 'Membuat / Edit / Hapus Sub-Program Kerja', tb: true, it: false, karyawan: false },
+  { feature: 'Menentukan Skala Prioritas (P1 - P4)', tb: true, it: false, karyawan: false },
+  { feature: 'Menambah / Edit / Hapus Kolom Milestone', tb: true, it: false, karyawan: false },
+  { feature: 'Mengatur Koneksi Google Sheets API', tb: true, it: false, karyawan: false }
 ];

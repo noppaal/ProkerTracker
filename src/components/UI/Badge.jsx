@@ -105,17 +105,46 @@ export function DelayTag({ target, actual, status }) {
 }
 
 export const RoleBadge = ({ role }) => {
-  const isAdmin = role === 'ADMIN';
+  const isTB = role === 'TB' || role === 'ADMIN';
+  const isIT = role === 'IT';
+  
+  if (isTB) {
+    return (
+      <span style={{
+        fontSize: 10, fontWeight: 700,
+        background: '#FEF3C7', color: '#92400E',
+        padding: '2px 7px', borderRadius: 99,
+        fontFamily: "'Geist Mono', monospace",
+        letterSpacing: '0.04em'
+      }}>
+        TB
+      </span>
+    );
+  }
+
+  if (isIT) {
+    return (
+      <span style={{
+        fontSize: 10, fontWeight: 700,
+        background: '#F3E8FF', color: '#6B21A8',
+        padding: '2px 7px', borderRadius: 99,
+        fontFamily: "'Geist Mono', monospace",
+        letterSpacing: '0.04em'
+      }}>
+        IT
+      </span>
+    );
+  }
+
   return (
     <span style={{
       fontSize: 10, fontWeight: 700,
-      background: isAdmin ? '#FEF3C7' : '#DBEAFE',
-      color: isAdmin ? '#D97706' : '#2563EB',
+      background: '#DBEAFE', color: '#1E40AF',
       padding: '2px 7px', borderRadius: 99,
       fontFamily: "'Geist Mono', monospace",
       letterSpacing: '0.04em'
     }}>
-      {isAdmin ? 'ADMIN' : 'MEMBER'}
+      KARYAWAN
     </span>
   );
 };

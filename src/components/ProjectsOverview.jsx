@@ -13,7 +13,7 @@ export const ProjectsOverview = ({
   onDeleteProject,
   role
 }) => {
-  const isAdmin = role === 'ADMIN';
+  const isAdmin = role === 'TB' || role === 'ADMIN';
 
   const calculateProjectProgress = (projectId) => {
     const projProkers = masterProkers.filter(p => p.projectId === projectId);

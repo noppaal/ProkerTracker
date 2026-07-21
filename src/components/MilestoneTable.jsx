@@ -1,127 +1,8 @@
 import React, { useState } from 'react';
-import { ExternalLink, Plus, Trash2, Edit2, Layers, FileText, X } from 'lucide-react';
+import { ExternalLink, Plus, Trash2, Edit2, Layers, MessageSquare, X, Check } from 'lucide-react';
 import { PBadge, Bar } from './UI/Badge';
 import { MilestoneCell } from './MilestoneCell';
 import { calculateSubProkerProgress } from '../services/apiService';
-
-// Interactive Sub-Program Notes Cell (Accessible for Member & Admin)
-const SubNotesCell = ({ notes = '', onSaveNotes }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [formNotes, setFormNotes] = useState(notes || '');
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    onSaveNotes(formNotes.trim());
-    setIsOpen(false);
-  };
-
-  return (
-    <div style={{ position: 'relative' }}>
-      <div
-        onClick={() => {
-          setFormNotes(notes || '');
-          setIsOpen(true);
-        }}
-        style={{
-          cursor: 'pointer', padding: '5px 8px', borderRadius: 8,
-          background: notes ? '#F8FAFC' : '#EFF6FF',
-          border: notes ? '1px solid #E2E8F0' : '1px dashed #BFDBFE',
-          transition: 'all 0.15s ease',
-          minWidth: 140
-        }}
-        className="nav-item"
-        title="Klik untuk melihat / menambahkan catatan sub-program"
-      >
-        {notes ? (
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 6 }}>
-            <p style={{
-              fontSize: 12, color: '#334155', lineHeight: 1.4, margin: 0,
-              display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'
-            }}>
-              {notes}
-            </p>
-            <Edit2 size={11} color="#94A3B8" style={{ flexShrink: 0, marginTop: 2 }} />
-          </div>
-        ) : (
-          <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-            <FileText size={11} /> + Tambah Catatan
-          </span>
-        )}
-      </div>
-
-      {/* Popover Modal for Sub-Program Notes */}
-      {isOpen && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 50,
-          background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(2px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16
-        }}>
-          <div style={{
-            background: '#FFFFFF', width: '100%', maxWidth: 420, borderRadius: 16,
-            border: '1px solid #E2E8F0', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.15)',
-            overflow: 'hidden', fontSize: 13
-          }}>
-            <div style={{
-              padding: '14px 18px', background: '#F8FAFC', borderBottom: '1px solid #E2E8F0',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between'
-            }}>
-              <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 14 }}>Catatan Sub-Program</span>
-              <button 
-                type="button" 
-                onClick={() => setIsOpen(false)} 
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: 2 }}
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <form onSubmit={handleSave} style={{ padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#475569', marginBottom: 6 }}>
-                  Catatan Spesifikasi / Perkembangan Sub-Program
-                </label>
-                <textarea
-                  rows="4"
-                  value={formNotes}
-                  onChange={(e) => setFormNotes(e.target.value)}
-                  placeholder="Tuliskan rincian spesifikasi, catatan teknis, atau kendala sub-program..."
-                  autoFocus
-                  style={{
-                    width: '100%', background: '#F8FAFC', border: '1px solid #E2E8F0',
-                    borderRadius: 10, padding: '10px 12px', fontSize: 13, color: '#0F172A'
-                  }}
-                />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  style={{
-                    padding: '8px 14px', borderRadius: 8, background: '#F1F5F9',
-                    border: '1px solid #E2E8F0', color: '#475569', fontSize: 13, fontWeight: 600, cursor: 'pointer'
-                  }}
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  style={{
-                    padding: '8px 16px', borderRadius: 8, background: '#2563EB',
-                    border: 'none', color: '#FFFFFF', fontSize: 13, fontWeight: 700, cursor: 'pointer',
-                    boxShadow: '0 2px 4px rgba(37, 99, 235, 0.2)'
-                  }}
-                >
-                  Simpan Catatan
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 export const MilestoneTable = ({
   masterProker,
@@ -134,7 +15,30 @@ export const MilestoneTable = ({
   onEditSubItem,
   role
 }) => {
-  const isAdmin = role === 'ADMIN';
+  const isAdmin = role === 'TB' || role === 'ADMIN';
+
+  // Sub-program Note Edit Modal State
+  const [editingSubNote, setEditingSubNote] = useState(null); // { subId, name, text }
+  const [noteInput, setNoteInput] = useState('');
+
+  const handleOpenNoteModal = (sub) => {
+    setEditingSubNote(sub);
+    setNoteInput(sub.specNotes || sub.notes || '');
+  };
+
+  const handleSaveSubNote = (e) => {
+    e.preventDefault();
+    if (!editingSubNote) return;
+
+    const updatedSub = {
+      ...editingSubNote,
+      specNotes: noteInput.trim()
+    };
+
+    onUpdateSubItem(masterProker.id, updatedSub);
+    setEditingSubNote(null);
+    setNoteInput('');
+  };
 
   return (
     <div style={{ background: '#FFFFFF' }}>
@@ -179,7 +83,7 @@ export const MilestoneTable = ({
                 <th style={{ padding: '10px 16px 10px 0', fontSize: 10, fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.07em', minWidth: 180 }}>Sub-Program</th>
                 <th style={{ padding: '10px 16px 10px 0', fontSize: 10, fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.07em', minWidth: 120 }}>Link Terkait</th>
                 <th style={{ padding: '10px 16px 10px 0', fontSize: 10, fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.07em', minWidth: 100 }}>Prioritas</th>
-                <th style={{ padding: '10px 16px 10px 0', fontSize: 10, fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.07em', maxWidth: 220 }}>Catatan Spek</th>
+                <th style={{ padding: '10px 16px 10px 0', fontSize: 10, fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.07em', maxWidth: 220 }}>Catatan</th>
 
                 {/* Dynamic Milestones */}
                 {dynamicMilestones.map((m) => (
@@ -196,6 +100,7 @@ export const MilestoneTable = ({
               {masterProker.subItems.map((sub, idx) => {
                 const subProgress = calculateSubProkerProgress(sub, dynamicMilestones);
                 const link = sub.relatedLink || sub.mockupUrl;
+                const noteText = sub.specNotes || sub.notes || '';
 
                 return (
                   <tr key={sub.id} style={{ borderBottom: '1px solid #E2E8F0', background: idx % 2 === 0 ? '#FFFFFF' : '#F8FAFC' }} className="sub-row">
@@ -239,19 +144,37 @@ export const MilestoneTable = ({
                       <PBadge p={sub.priority || masterProker.priority || 'P2'} />
                     </td>
 
-                    {/* Interactive Sub-Program Notes Cell (Accessible to Member & Admin) */}
+                    {/* Catatan / Spec Column - ALL ROLES CAN CLICK TO EDIT/ADD NOTE */}
                     <td style={{ padding: '14px 16px 14px 0', verticalAlign: 'top', maxWidth: 220 }}>
-                      <SubNotesCell
-                        notes={sub.specNotes || sub.notes || ''}
-                        onSaveNotes={(newNotes) => {
-                          const updatedSub = {
-                            ...sub,
-                            specNotes: newNotes,
-                            notes: newNotes
-                          };
-                          onUpdateSubItem(masterProker.id, updatedSub);
+                      <div 
+                        onClick={() => handleOpenNoteModal(sub)}
+                        style={{
+                          cursor: 'pointer', padding: '3px 6px', borderRadius: 6,
+                          border: '1px solid transparent', transition: 'all 0.15s'
                         }}
-                      />
+                        className="nav-item"
+                        title="Klik untuk menambah atau mengedit catatan sub-program"
+                      >
+                        {noteText ? (
+                          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 4 }}>
+                            <MessageSquare size={12} color="#2563EB" style={{ flexShrink: 0, marginTop: 2 }} />
+                            <p style={{
+                              fontSize: 12, color: '#334155', lineHeight: 1.4, margin: 0,
+                              display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'
+                            }}>
+                              {noteText}
+                            </p>
+                          </div>
+                        ) : (
+                          <span style={{
+                            fontSize: 11, color: '#2563EB', background: '#EFF6FF',
+                            border: '1px border-blue-200', padding: '2px 8px', borderRadius: 6,
+                            display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 600
+                          }}>
+                            <Plus size={11} /> Catatan
+                          </span>
+                        )}
+                      </div>
                     </td>
 
                     {/* Dynamic Milestone Cells */}
@@ -262,6 +185,7 @@ export const MilestoneTable = ({
                         <td key={m.id} style={{ padding: '14px 16px 14px 0', verticalAlign: 'top', minWidth: 140 }}>
                           <MilestoneCell
                             milestoneData={milestoneData}
+                            milestoneMeta={m}
                             role={role}
                             hasAccess={true}
                             onUpdateMilestone={(updatedCell) => {
@@ -316,6 +240,91 @@ export const MilestoneTable = ({
               })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Sub-Program Note Interactive Edit Popover Modal */}
+      {editingSubNote && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 50,
+          background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(2px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16
+        }}>
+          <div style={{
+            background: '#FFFFFF', width: '100%', maxWidth: 420, borderRadius: 16,
+            border: '1px solid #E2E8F0', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+            overflow: 'hidden', fontSize: 13
+          }}>
+            
+            <div style={{
+              padding: '14px 18px', background: '#F8FAFC', borderBottom: '1px solid #E2E8F0',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+            }}>
+              <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 14 }}>
+                Isi Catatan Sub-Program
+              </span>
+              <button 
+                onClick={() => setEditingSubNote(null)} 
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: 2 }}
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveSubNote} style={{ padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div>
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#64748B', marginBottom: 4, textTransform: 'uppercase' }}>
+                  Sub-Program:
+                </label>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#0F172A' }}>
+                  {editingSubNote.name}
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#0F172A', marginBottom: 5 }}>
+                  Catatan Spek / Progress Tambahan *
+                </label>
+                <textarea
+                  rows="4"
+                  value={noteInput}
+                  onChange={(e) => setNoteInput(e.target.value)}
+                  placeholder="Ketik catatan spek atau progress tambahan untuk sub-program ini..."
+                  autoFocus
+                  style={{
+                    width: '100%', background: '#FFFFFF', border: '2px solid #2563EB',
+                    borderRadius: 8, padding: '10px 12px', fontSize: 13, color: '#0F172A',
+                    boxShadow: '0 1px 3px rgba(37,99,235,0.1)'
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 4 }}>
+                <button
+                  type="button"
+                  onClick={() => setEditingSubNote(null)}
+                  style={{
+                    padding: '8px 14px', borderRadius: 8, background: '#F1F5F9',
+                    border: '1px solid #E2E8F0', color: '#475569', fontSize: 13, fontWeight: 600, cursor: 'pointer'
+                  }}
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  style={{
+                    padding: '8px 16px', borderRadius: 8, background: '#2563EB',
+                    border: 'none', color: '#FFFFFF', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                    boxShadow: '0 2px 4px rgba(37, 99, 235, 0.2)'
+                  }}
+                >
+                  Simpan Catatan
+                </button>
+              </div>
+
+            </form>
+
+          </div>
         </div>
       )}
 

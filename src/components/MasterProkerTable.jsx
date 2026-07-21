@@ -22,7 +22,7 @@ export const MasterProkerTable = ({
   projects = [],
   activeProjectId = 'ALL'
 }) => {
-  const isAdmin = role === 'ADMIN';
+  const isAdmin = role === 'TB' || role === 'ADMIN';
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 

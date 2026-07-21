@@ -281,12 +281,12 @@ export const ProkerModal = ({
                     </div>
 
                     <div className="md:col-span-2">
-                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Catatan Spek</label>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Catatan</label>
                       <input
                         type="text"
                         value={sub.specNotes || ''}
                         onChange={(e) => handleSubItemChange(idx, 'specNotes', e.target.value)}
-                        placeholder="Catatan Spesifikasi / Kebutuhan..."
+                        placeholder="Ketik catatan..."
                         className="w-full bg-white border border-slate-300 text-slate-800 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-blue-600"
                       />
                     </div>

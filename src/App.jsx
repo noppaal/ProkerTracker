@@ -437,7 +437,7 @@ export default function App() {
                   margin: 0, fontSize: 30, fontWeight: 800, color: '#0F172A',
                   letterSpacing: '-0.02em', lineHeight: 1.2
                 }}>
-                  {activeProject ? activeProject.name : 'Work Program Tracker'}
+                  {activeProject ? activeProject.name : 'Project Tracker'}
                 </h1>
                 <p style={{ margin: '4px 0 0', fontSize: 14, color: '#64748B', fontWeight: 400 }}>
                   {activeProject ? activeProject.description : 'Monitoring and managing active strategic initiatives.'}
@@ -445,7 +445,7 @@ export default function App() {
               </div>
             </div>
 
-            {role === 'ADMIN' && (
+            {(role === 'TB' || role === 'ADMIN') && activeProjectId !== 'ALL' && (
               <button
                 onClick={() => {
                   setEditingProker(null);
@@ -587,7 +587,6 @@ export default function App() {
               setEditingProker(null);
               setIsProkerModalOpen(true);
             }}
-            onOpenAddMilestone={() => setIsMilestoneModalOpen(true)}
             role={role}
           />
 
@@ -651,14 +650,6 @@ export default function App() {
         activeProjectId={activeProjectId}
       />
 
-      <DynamicMilestoneModal
-        isOpen={isMilestoneModalOpen}
-        onClose={() => setIsMilestoneModalOpen(false)}
-        onAddMilestone={handleAddMilestoneColumn}
-        onUpdateMilestone={handleUpdateMilestoneColumn}
-        onDeleteMilestone={handleDeleteMilestoneColumn}
-        existingMilestones={dynamicMilestones}
-      />
 
       <AppsScriptConfigModal
         isOpen={isConfigModalOpen}

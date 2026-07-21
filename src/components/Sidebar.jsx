@@ -29,7 +29,7 @@ export const Sidebar = ({
   onManualSync,
   isSyncing
 }) => {
-  const isAdmin = role === 'ADMIN';
+  const isAdmin = role === 'TB' || role === 'ADMIN';
 
   return (
     <aside style={{

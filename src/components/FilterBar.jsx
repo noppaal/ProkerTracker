@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, X, ChevronRight, Plus } from 'lucide-react';
+import { Search, X, ChevronRight } from 'lucide-react';
 
 export const FilterBar = ({
   searchQuery,
@@ -10,15 +10,12 @@ export const FilterBar = ({
   setStatusFilter,
   isExpandAll,
   toggleExpandAll,
-  onOpenAddProker,
-  onOpenAddMilestone,
   role
 }) => {
-  const isAdmin = role === 'ADMIN';
   const hasFilter = !!searchQuery || priorityFilter !== 'ALL' || statusFilter !== 'ALL';
 
   return (
-    <div style={{ display: 'flex', itemsAlign: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
       
       {/* Search Input */}
       <div style={{
@@ -107,21 +104,6 @@ export const FilterBar = ({
         <ChevronRight size={13} style={{ transform: isExpandAll ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }} />
         {isExpandAll ? 'Tutup Semua Sub' : 'Buka Semua Sub'}
       </button>
-
-      {/* Add Milestone Column CTA */}
-      {isAdmin && onOpenAddMilestone && (
-        <button
-          onClick={onOpenAddMilestone}
-          style={{
-            fontSize: 13, color: '#0F172A', background: '#FFFFFF',
-            border: '1px solid #E2E8F0', padding: '7px 12px', borderRadius: 8, cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600,
-            boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)'
-          }}
-        >
-          + Kolom Milestone
-        </button>
-      )}
 
     </div>
   );

@@ -22,21 +22,28 @@ export const PRIORITY_OPTIONS = [
   { value: 'P4', label: 'P4 - Rendah', color: 'bg-blue-100 text-blue-800 border-blue-300 font-medium', rank: 4 }
 ];
 
-// Pre-seeded demo user accounts with simplified ADMIN / MEMBER roles
+// Pre-seeded demo user accounts with the 3 exact roles: TB (Transfer Bisnis), IT, KARYAWAN
 export const INITIAL_USERS = [
   {
-    id: 'usr-admin',
-    name: 'Budi Santoso (Admin)',
+    id: 'usr-tb',
+    name: 'Budi Santoso (Transfer Bisnis)',
     email: 'admin@company.com',
     password: '123',
-    role: 'ADMIN'
+    role: 'TB'
   },
   {
-    id: 'usr-member',
-    name: 'Siti Rahma (Member)',
+    id: 'usr-it',
+    name: 'Rian Pratama (IT)',
+    email: 'it@company.com',
+    password: '123',
+    role: 'IT'
+  },
+  {
+    id: 'usr-karyawan',
+    name: 'Siti Rahma (Karyawan)',
     email: 'staff@company.com',
     password: '123',
-    role: 'MEMBER'
+    role: 'KARYAWAN'
   }
 ];
 
@@ -77,11 +84,11 @@ export const INITIAL_MASTER_PROKER = [
         techNotes: 'Integrasi SDK fingerprint selesai diproses.',
         relatedLink: 'https://axure.com/proto/biometric-auth',
         milestones: {
-          m_ureq: { status: 'Done', targetDate: '2026-06-01', actualDate: '2026-05-30' },
-          m_mockup: { status: 'Done', targetDate: '2026-06-15', actualDate: '2026-06-14' },
-          m_dev: { status: 'Done', targetDate: '2026-07-10', actualDate: '2026-07-09' },
-          m_testing: { status: 'In Progress', targetDate: '2026-07-25', actualDate: '' },
-          m_deploy: { status: 'Not Yet', targetDate: '2026-08-05', actualDate: '' }
+          m_ureq: { status: 'Done', targetDate: '2026-06-01', actualDate: '2026-05-30', notes: 'Persetujuan syarat fitur Ureq selesai.' },
+          m_mockup: { status: 'Done', targetDate: '2026-06-15', actualDate: '2026-06-14', notes: 'Desain UX disetujui tim bisnis.' },
+          m_dev: { status: 'Done', targetDate: '2026-07-10', actualDate: '2026-07-09', notes: 'Service API Auth biometric rilis stg.' },
+          m_testing: { status: 'In Progress', targetDate: '2026-07-25', actualDate: '', notes: 'Pengujian regression test.' },
+          m_deploy: { status: 'Not Yet', targetDate: '2026-08-05', actualDate: '', notes: '' }
         }
       }
     ]
@@ -103,11 +110,11 @@ export const INITIAL_MASTER_PROKER = [
         techNotes: 'Rate limit queue 100 req/min.',
         relatedLink: 'https://drive.google.com/file/api-doc-slik',
         milestones: {
-          m_ureq: { status: 'Done', targetDate: '2026-06-10', actualDate: '2026-06-10' },
-          m_mockup: { status: 'Tidak ada Link Terkait', targetDate: '2026-06-15', actualDate: '2026-06-15' },
-          m_dev: { status: 'In Progress', targetDate: '2026-07-28', actualDate: '' },
-          m_testing: { status: 'Not Yet', targetDate: '2026-08-12', actualDate: '' },
-          m_deploy: { status: 'Not Yet', targetDate: '2026-08-25', actualDate: '' }
+          m_ureq: { status: 'Done', targetDate: '2026-06-10', actualDate: '2026-06-10', notes: 'Format payload disetujui OJK.' },
+          m_mockup: { status: 'Tidak ada Link Terkait', targetDate: '2026-06-15', actualDate: '2026-06-15', notes: 'N/A' },
+          m_dev: { status: 'In Progress', targetDate: '2026-07-28', actualDate: '', notes: 'Integrasi SSL Certificate.' },
+          m_testing: { status: 'Not Yet', targetDate: '2026-08-12', actualDate: '', notes: '' },
+          m_deploy: { status: 'Not Yet', targetDate: '2026-08-25', actualDate: '', notes: '' }
         }
       }
     ]

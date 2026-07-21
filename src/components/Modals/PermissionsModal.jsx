@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Shield, Users, CheckCircle, Lock } from 'lucide-react';
+import { X, Shield, Users, CheckCircle, Lock, Code } from 'lucide-react';
 import { PERMISSIONS_MATRIX } from '../../data/googleAppsScript';
 
 export const PermissionsModal = ({
@@ -9,15 +9,21 @@ export const PermissionsModal = ({
 }) => {
   if (!isOpen) return null;
 
+  const getRoleLabel = (r) => {
+    if (r === 'TB' || r === 'ADMIN') return 'Transfer Bisnis (TB)';
+    if (r === 'IT') return 'IT Dept';
+    return 'Karyawan';
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-      <div className="bg-white w-full max-w-2xl rounded-2xl border border-slate-200 shadow-2xl overflow-hidden text-xs">
+      <div className="bg-white w-full max-w-3xl rounded-2xl border border-slate-200 shadow-2xl overflow-hidden text-xs">
         
         {/* Header */}
         <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-amber-400" />
-            <h2 className="font-bold text-sm">Matriks Hak Akses (RBAC Matrix)</h2>
+            <h2 className="font-bold text-sm">Matriks Hak Akses (RBAC Matrix - 3 Role)</h2>
           </div>
           <button onClick={onClose} className="p-1 rounded hover:bg-slate-800 text-slate-400">
             <X className="w-4 h-4" />
@@ -30,10 +36,8 @@ export const PermissionsModal = ({
           <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="font-bold text-slate-900 text-xs">Role Akun Saat Ini:</span>
-              <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                currentRole === 'ADMIN' ? 'bg-amber-100 text-amber-900' : 'bg-blue-100 text-blue-900'
-              }`}>
-                {currentRole === 'ADMIN' ? 'ADMIN' : 'MEMBER'}
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-900">
+                {getRoleLabel(currentRole)}
               </span>
             </div>
           </div>
@@ -46,13 +50,19 @@ export const PermissionsModal = ({
                   <th className="py-3 px-4 text-center w-28 bg-amber-500/10 text-amber-900 font-bold">
                     <div className="flex items-center justify-center gap-1">
                       <Shield className="w-3.5 h-3.5 text-amber-600" />
-                      <span>ADMIN</span>
+                      <span>TB</span>
+                    </div>
+                  </th>
+                  <th className="py-3 px-4 text-center w-28 bg-purple-500/10 text-purple-900 font-bold">
+                    <div className="flex items-center justify-center gap-1">
+                      <Code className="w-3.5 h-3.5 text-purple-600" />
+                      <span>IT</span>
                     </div>
                   </th>
                   <th className="py-3 px-4 text-center w-28 bg-blue-500/10 text-blue-900 font-bold">
                     <div className="flex items-center justify-center gap-1">
                       <Users className="w-3.5 h-3.5 text-blue-600" />
-                      <span>MEMBER</span>
+                      <span>KARYAWAN</span>
                     </div>
                   </th>
                 </tr>
@@ -64,18 +74,27 @@ export const PermissionsModal = ({
                       {item.feature}
                     </td>
                     
-                    {/* Admin Access */}
+                    {/* TB Access */}
                     <td className="py-2.5 px-4 text-center bg-amber-500/5">
-                      {item.admin ? (
+                      {item.tb ? (
                         <CheckCircle className="w-4 h-4 text-emerald-600 mx-auto" />
                       ) : (
                         <Lock className="w-3.5 h-3.5 text-slate-400 mx-auto" />
                       )}
                     </td>
 
-                    {/* Member Access */}
+                    {/* IT Access */}
+                    <td className="py-2.5 px-4 text-center bg-purple-500/5">
+                      {item.it ? (
+                        <CheckCircle className="w-4 h-4 text-emerald-600 mx-auto" />
+                      ) : (
+                        <Lock className="w-3.5 h-3.5 text-rose-500 mx-auto" />
+                      )}
+                    </td>
+
+                    {/* Karyawan Access */}
                     <td className="py-2.5 px-4 text-center bg-blue-500/5">
-                      {item.member ? (
+                      {item.karyawan ? (
                         <CheckCircle className="w-4 h-4 text-emerald-600 mx-auto" />
                       ) : (
                         <Lock className="w-3.5 h-3.5 text-rose-500 mx-auto" />
