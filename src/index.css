@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Lora:wght@500;600&family=Geist+Mono:wght@400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #FAFAF9;
+    color: #1C1917;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+::-webkit-scrollbar { 
+  width: 5px; 
+  height: 5px; 
+}
+::-webkit-scrollbar-track { 
+  background: transparent; 
+}
+::-webkit-scrollbar-thumb { 
+  background: #CBD5E1; 
+  border-radius: 99px; 
+}
+::-webkit-scrollbar-thumb:hover { 
+  background: #94A3B8; 
+}
+
+select { 
+  cursor: pointer; 
+}
+
+input:focus, select:focus { 
+  outline: none; 
+}
+
+/* Hover effects for rows and navigation items */
+.proj-row:hover { background: #F8FAFC !important; }
+.prog-header:hover { background: #F8FAFC !important; }
+.sub-row:hover td { background: #F8FAFC; }
+.nav-item:hover { background: #E2E8F0 !important; }
+.nav-item-active { background: #FFFFFF !important; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+.kpi-card:hover { background: #F8FAFC !important; }
