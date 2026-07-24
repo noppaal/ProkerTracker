@@ -7,7 +7,9 @@ import {
   RefreshCw, 
   Plus, 
   User, 
-  Sliders
+  Sliders,
+  Users,
+  Lock
 } from 'lucide-react';
 import { RoleBadge } from './UI/Badge';
 
@@ -27,25 +29,27 @@ export const Sidebar = ({
   masterProkers = [],
   dataSource,
   onManualSync,
-  isSyncing
+  isSyncing,
+  onOpenUserManagement,
+  onOpenChangePassword
 }) => {
-  const isAdmin = role === 'TB' || role === 'ADMIN';
+  const isAdmin = role === 'TB';
 
   return (
     <aside style={{
       width: sidebarOpen ? 230 : 0,
       flexShrink: 0,
-      background: '#F8FAFC',
+      background: '#F1F5F9',
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
       transition: 'width 0.22s ease',
-      borderRight: '1px solid #E2E8F0',
+      borderRight: '1px solid #CBD5E1',
     }}>
       <div style={{ width: 230, display: 'flex', flexDirection: 'column', height: '100%' }}>
 
         {/* User Account Info Bar at Top of Sidebar */}
-        <div style={{ padding: '16px 14px 14px', borderBottom: '1px solid #E2E8F0', background: '#FFFFFF' }}>
+        <div style={{ padding: '16px 14px 14px', borderBottom: '1px solid #CBD5E1', background: '#FFFFFF' }}>
           {currentUser ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div style={{
@@ -123,17 +127,17 @@ export const Sidebar = ({
                 background: activeProjectId === 'ALL' ? 'rgba(255,255,255,0.2)' : '#E2E8F0',
                 padding: '1px 7px', borderRadius: 99
               }}>
-                {masterProkers.length}
+                {projects.length}
               </span>
             </button>
           </div>
 
-          <div style={{ height: 1, background: '#E2E8F0', margin: '8px 4px 14px' }} />
+          <div style={{ height: 1, background: '#CBD5E1', margin: '8px 4px 14px' }} />
 
           {/* Individual Projects List Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px 8px' }}>
             <span style={{ fontSize: 11, color: '#64748B', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 700 }}>
-              Daftar Projek ({projects.length})
+              Daftar ProKer ({projects.length})
             </span>
             {isAdmin && (
               <button
@@ -143,7 +147,7 @@ export const Sidebar = ({
                   fontSize: 11, color: '#2563EB', fontWeight: 700,
                   display: 'flex', alignItems: 'center', gap: 3, padding: 0
                 }}
-                title="Buat Projek Baru"
+                title="Buat Program Kerja Baru"
               >
                 <Plus size={12} /> Baru
               </button>
@@ -160,12 +164,12 @@ export const Sidebar = ({
                 key={proj.id}
                 onClick={() => onSelectProject(proj.id)}
                 style={{
-                  width: '100%', textAlign: 'left', border: 'none', cursor: 'pointer',
+                  width: '100%', textAlign: 'left', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', gap: 9,
                   padding: '8px 10px', borderRadius: 7, marginBottom: 3,
                   background: isSelected ? '#FFFFFF' : 'transparent',
                   color: isSelected ? '#0F172A' : '#475569',
-                  border: isSelected ? '1px solid #E2E8F0' : '1px solid transparent',
+                  border: isSelected ? '1px solid #CBD5E1' : '1px solid transparent',
                   boxShadow: isSelected ? '0 1px 2px rgba(0, 0, 0, 0.05)' : 'none',
                   transition: 'all 0.15s ease',
                 }}
@@ -181,7 +185,7 @@ export const Sidebar = ({
             );
           })}
 
-          <div style={{ height: 1, background: '#E2E8F0', margin: '14px 4px 8px' }} />
+          <div style={{ height: 1, background: '#CBD5E1', margin: '14px 4px 8px' }} />
 
           {/* Sync Status indicator */}
           <div style={{ padding: '6px 8px', display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -213,7 +217,22 @@ export const Sidebar = ({
         </div>
 
         {/* Bottom Menu Actions */}
-        <div style={{ padding: '10px', borderTop: '1px solid #E2E8F0', background: '#FFFFFF' }}>
+        <div style={{ padding: '10px', borderTop: '1px solid #CBD5E1', background: '#FFFFFF' }}>
+          {currentUser && (
+            <button
+              onClick={onOpenChangePassword}
+              style={{
+                width: '100%', textAlign: 'left', border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '7px 9px', borderRadius: 7, marginBottom: 2,
+                background: 'transparent', color: '#475569',
+              }}
+            >
+              <User size={14} style={{ opacity: 0.8 }} />
+              <span style={{ fontSize: 13, fontWeight: 500 }}>Kelola Profil</span>
+            </button>
+          )}
+
           <button
             onClick={onOpenPermissions}
             style={{

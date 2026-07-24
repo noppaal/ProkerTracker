@@ -22,28 +22,14 @@ export const PRIORITY_OPTIONS = [
   { value: 'P4', label: 'P4 - Rendah', color: 'bg-blue-100 text-blue-800 border-blue-300 font-medium', rank: 4 }
 ];
 
-// Pre-seeded demo user accounts with the 3 exact roles: TB (Transfer Bisnis), IT, KARYAWAN
+// Pre-seeded demo user accounts with the single initial Admin account
 export const INITIAL_USERS = [
   {
-    id: 'usr-tb',
-    name: 'Budi Santoso (Transfer Bisnis)',
-    email: 'admin@company.com',
-    password: '123',
-    role: 'TB'
-  },
-  {
-    id: 'usr-it',
-    name: 'Rian Pratama (IT)',
-    email: 'it@company.com',
-    password: '123',
-    role: 'IT'
-  },
-  {
-    id: 'usr-karyawan',
-    name: 'Siti Rahma (Karyawan)',
-    email: 'staff@company.com',
-    password: '123',
-    role: 'KARYAWAN'
+    id: 'usr-admin',
+    name: 'Admin',
+    email: 'admin@gmail.com',
+    password: 'superadmin321@',
+    role: 'ADMIN'
   }
 ];
 
@@ -53,6 +39,7 @@ export const INITIAL_PROJECTS = [
     id: 'proj-001',
     code: 'PRJ-01',
     name: 'Transformasi Digital Core Banking 2026',
+    year: '2026',
     description: 'Inisiatif strategis modernisasi portal perbankan dan e-channel.',
     color: '#2563eb'
   },
@@ -60,6 +47,7 @@ export const INITIAL_PROJECTS = [
     id: 'proj-002',
     code: 'PRJ-02',
     name: 'Otomasi Credit Scoring & AI Risk Engine',
+    year: '2026',
     description: 'Implementasi Machine Learning untuk persetujuan kredit otomatis.',
     color: '#7c3aed'
   }
@@ -75,23 +63,15 @@ export const INITIAL_MASTER_PROKER = [
     priority: 'P1',
     relatedLink: 'https://figma.com/file/core-banking-v2',
     description: 'Peningkatan keamanan transaksi nasabah berbasis biometric.',
-    subItems: [
-      {
-        id: 'sub-101',
-        name: 'Integrasi SDK Biometric Fingerprint & Face Auth',
-        priority: 'P1',
-        specNotes: 'Kebutuhan standar ISO-27001 dan encrypt token SHA-256.',
-        techNotes: 'Integrasi SDK fingerprint selesai diproses.',
-        relatedLink: 'https://axure.com/proto/biometric-auth',
-        milestones: {
-          m_ureq: { status: 'Done', targetDate: '2026-06-01', actualDate: '2026-05-30', notes: 'Persetujuan syarat fitur Ureq selesai.' },
-          m_mockup: { status: 'Done', targetDate: '2026-06-15', actualDate: '2026-06-14', notes: 'Desain UX disetujui tim bisnis.' },
-          m_dev: { status: 'Done', targetDate: '2026-07-10', actualDate: '2026-07-09', notes: 'Service API Auth biometric rilis stg.' },
-          m_testing: { status: 'In Progress', targetDate: '2026-07-25', actualDate: '', notes: 'Pengujian regression test.' },
-          m_deploy: { status: 'Not Yet', targetDate: '2026-08-05', actualDate: '', notes: '' }
-        }
-      }
-    ]
+    specNotes: 'Kebutuhan standar ISO-27001 dan encrypt token SHA-256.',
+    techNotes: 'Integrasi SDK fingerprint selesai diproses.',
+    milestones: {
+      m_ureq: { status: 'Done', targetDate: '2026-06-01', actualDate: '2026-05-30', notes: 'Persetujuan syarat fitur Ureq selesai.' },
+      m_mockup: { status: 'Done', targetDate: '2026-06-15', actualDate: '2026-06-14', notes: 'Desain UX disetujui tim bisnis.' },
+      m_dev: { status: 'Done', targetDate: '2026-07-10', actualDate: '2026-07-09', notes: 'Service API Auth biometric rilis stg.' },
+      m_testing: { status: 'In Progress', targetDate: '2026-07-25', actualDate: '', notes: 'Pengujian regression test.' },
+      m_deploy: { status: 'Not Yet', targetDate: '2026-08-05', actualDate: '', notes: '' }
+    }
   },
   {
     id: 'prk-002',
@@ -101,22 +81,15 @@ export const INITIAL_MASTER_PROKER = [
     priority: 'P2',
     relatedLink: 'https://drive.google.com/file/spec-slik',
     description: 'Penarikan riwayat kredit nasabah via API OJK.',
-    subItems: [
-      {
-        id: 'sub-201',
-        name: 'Auto-fetching SLIK Gateway API',
-        priority: 'P2',
-        specNotes: 'Auto fetch data OJK SLIK via REST API gateway.',
-        techNotes: 'Rate limit queue 100 req/min.',
-        relatedLink: 'https://drive.google.com/file/api-doc-slik',
-        milestones: {
-          m_ureq: { status: 'Done', targetDate: '2026-06-10', actualDate: '2026-06-10', notes: 'Format payload disetujui OJK.' },
-          m_mockup: { status: 'Tidak ada Link Terkait', targetDate: '2026-06-15', actualDate: '2026-06-15', notes: 'N/A' },
-          m_dev: { status: 'In Progress', targetDate: '2026-07-28', actualDate: '', notes: 'Integrasi SSL Certificate.' },
-          m_testing: { status: 'Not Yet', targetDate: '2026-08-12', actualDate: '', notes: '' },
-          m_deploy: { status: 'Not Yet', targetDate: '2026-08-25', actualDate: '', notes: '' }
-        }
-      }
-    ]
+    specNotes: 'Auto fetch data OJK SLIK via REST API gateway.',
+    techNotes: 'Rate limit queue 100 req/min.',
+    milestones: {
+      m_ureq: { status: 'Done', targetDate: '2026-06-10', actualDate: '2026-06-10', notes: 'Format payload disetujui OJK.' },
+      m_mockup: { status: 'Tidak ada Link Terkait', targetDate: '2026-06-15', actualDate: '2026-06-15', notes: 'N/A' },
+      m_dev: { status: 'In Progress', targetDate: '2026-07-28', actualDate: '', notes: 'Integrasi SSL Certificate.' },
+      m_testing: { status: 'Not Yet', targetDate: '2026-08-12', actualDate: '', notes: '' },
+      m_deploy: { status: 'Not Yet', targetDate: '2026-08-25', actualDate: '', notes: '' }
+    }
   }
 ];
+

@@ -10,8 +10,9 @@ export const PermissionsModal = ({
   if (!isOpen) return null;
 
   const getRoleLabel = (r) => {
-    if (r === 'TB' || r === 'ADMIN') return 'Transfer Bisnis (TB)';
-    if (r === 'IT') return 'IT Dept';
+    if (r === 'ADMIN') return 'Admin (User Manager)';
+    if (r === 'TB') return 'Transformasi Bisnis (TB)';
+    if (r === 'IT') return 'IT';
     return 'Karyawan';
   };
 
@@ -47,19 +48,25 @@ export const PermissionsModal = ({
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-xs text-slate-600 font-bold">
                   <th className="py-3 px-4">Fitur / Operasi Sistem</th>
-                  <th className="py-3 px-4 text-center w-28 bg-amber-500/10 text-amber-900 font-bold">
+                  <th className="py-3 px-4 text-center w-24 bg-rose-500/10 text-rose-900 font-bold">
+                    <div className="flex items-center justify-center gap-1">
+                      <Shield className="w-3.5 h-3.5 text-rose-600" />
+                      <span>ADMIN</span>
+                    </div>
+                  </th>
+                  <th className="py-3 px-4 text-center w-24 bg-amber-500/10 text-amber-900 font-bold">
                     <div className="flex items-center justify-center gap-1">
                       <Shield className="w-3.5 h-3.5 text-amber-600" />
                       <span>TB</span>
                     </div>
                   </th>
-                  <th className="py-3 px-4 text-center w-28 bg-purple-500/10 text-purple-900 font-bold">
+                  <th className="py-3 px-4 text-center w-24 bg-purple-500/10 text-purple-900 font-bold">
                     <div className="flex items-center justify-center gap-1">
                       <Code className="w-3.5 h-3.5 text-purple-600" />
                       <span>IT</span>
                     </div>
                   </th>
-                  <th className="py-3 px-4 text-center w-28 bg-blue-500/10 text-blue-900 font-bold">
+                  <th className="py-3 px-4 text-center w-24 bg-blue-500/10 text-blue-900 font-bold">
                     <div className="flex items-center justify-center gap-1">
                       <Users className="w-3.5 h-3.5 text-blue-600" />
                       <span>KARYAWAN</span>
@@ -74,6 +81,15 @@ export const PermissionsModal = ({
                       {item.feature}
                     </td>
                     
+                    {/* ADMIN Access */}
+                    <td className="py-2.5 px-4 text-center bg-rose-500/5">
+                      {item.admin ? (
+                        <CheckCircle className="w-4 h-4 text-emerald-600 mx-auto" />
+                      ) : (
+                        <Lock className="w-3.5 h-3.5 text-slate-400 mx-auto" />
+                      )}
+                    </td>
+
                     {/* TB Access */}
                     <td className="py-2.5 px-4 text-center bg-amber-500/5">
                       {item.tb ? (
@@ -88,7 +104,7 @@ export const PermissionsModal = ({
                       {item.it ? (
                         <CheckCircle className="w-4 h-4 text-emerald-600 mx-auto" />
                       ) : (
-                        <Lock className="w-3.5 h-3.5 text-rose-500 mx-auto" />
+                        <Lock className="w-3.5 h-3.5 text-slate-400 mx-auto" />
                       )}
                     </td>
 
@@ -97,7 +113,7 @@ export const PermissionsModal = ({
                       {item.karyawan ? (
                         <CheckCircle className="w-4 h-4 text-emerald-600 mx-auto" />
                       ) : (
-                        <Lock className="w-3.5 h-3.5 text-rose-500 mx-auto" />
+                        <Lock className="w-3.5 h-3.5 text-slate-400 mx-auto" />
                       )}
                     </td>
                   </tr>

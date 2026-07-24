@@ -16,17 +16,31 @@ export const MilestoneCell = ({
   const targetDate = milestoneData.targetDate || milestoneData.target || '';
   const actualDate = milestoneData.actualDate || milestoneData.actual || '';
   const notes = milestoneData.notes || '';
+  const startDate = milestoneData.startDate || milestoneData.start || '';
+  const actualStartDate = milestoneData.actualStartDate || milestoneData.actualStart || '';
 
   const [formStatus, setFormStatus] = useState(currentStatus);
   const [formTargetDate, setFormTargetDate] = useState(targetDate);
   const [formActualDate, setFormActualDate] = useState(actualDate);
   const [formNotes, setFormNotes] = useState(notes);
+  const [formStartDate, setFormStartDate] = useState(startDate);
+  const [formActualStartDate, setFormActualStartDate] = useState(actualStartDate);
+
+  const handleOpen = () => {
+    setFormStatus(currentStatus);
+    setFormTargetDate(targetDate);
+    setFormActualDate(actualDate);
+    setFormNotes(notes);
+    setFormStartDate(startDate);
+    setFormActualStartDate(actualStartDate);
+    setIsOpen(true);
+  };
 
   // Permission Checks per Role:
-  // - TB (Transfer Bisnis / Admin): Full status + dates + milestone notes
+  // - TB (Transformasi Bisnis / Admin): Full status + dates + milestone notes
   // - IT: Status + dates + milestone notes ONLY for Development & Deployment milestones
   // - KARYAWAN: View status, dates & milestone notes (read-only)
-  const isTB = role === 'TB' || role === 'ADMIN';
+  const isTB = role === 'TB';
   const isIT = role === 'IT';
 
   const milestoneCode = (milestoneMeta.code || '').toUpperCase();
@@ -44,13 +58,28 @@ export const MilestoneCell = ({
     e.preventDefault();
     if (!canEditStatus && !canEditNotes) return;
 
+    if (canEditStatus && formStatus === 'Done' && (!formActualDate || !formActualDate.trim())) {
+      alert('Wajib mengisikan Actual Date (Tanggal Realisasi) jika status milestone diubah menjadi Done.');
+      return;
+    }
+
+    // Check if targetDate was empty and is now being added
+    const isTargetNewlyAdded = (!targetDate || !targetDate.trim()) && (formTargetDate && formTargetDate.trim());
+    const todayStr = new Date().toISOString().split('T')[0];
+    const defaultStartDate = isTargetNewlyAdded ? todayStr : (milestoneData.startDate || milestoneData.start || '');
+    const newStartDate = canEditStatus ? (formStartDate || defaultStartDate) : startDate;
+
     onUpdateMilestone({
       status: canEditStatus ? formStatus : currentStatus,
       targetDate: canEditStatus ? formTargetDate : targetDate,
       target: canEditStatus ? formTargetDate : targetDate,
       actualDate: canEditStatus ? formActualDate : actualDate,
       actual: canEditStatus ? formActualDate : actualDate,
-      notes: canEditNotes ? formNotes : notes
+      notes: canEditNotes ? formNotes : notes,
+      startDate: newStartDate,
+      start: newStartDate,
+      actualStartDate: canEditStatus ? formActualStartDate : actualStartDate,
+      actualStart: canEditStatus ? formActualStartDate : actualStartDate
     });
     setIsOpen(false);
   };
@@ -60,7 +89,7 @@ export const MilestoneCell = ({
       
       {/* Read-Only / Interactive Cell View */}
       <div 
-        onClick={() => hasAccess && setIsOpen(true)}
+        onClick={() => hasAccess && handleOpen()}
         style={{
           display: 'flex', flexDirection: 'column', gap: 4, cursor: hasAccess ? 'pointer' : 'default',
           padding: '4px 6px', borderRadius: 8, transition: 'background 0.15s'
@@ -153,6 +182,28 @@ export const MilestoneCell = ({
                 </select>
               </div>
 
+              {/* Tanggal Mulai (Timeline) */}
+              <div>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#475569', marginBottom: 5 }}>
+                  Tanggal Mulai (Timeline)
+                </label>
+                <input
+                  type="date"
+                  value={formStartDate}
+                  onChange={(e) => setFormStartDate(e.target.value)}
+                  disabled={!canEditStatus}
+                  style={{
+                    width: '100%',
+                    background: canEditStatus ? '#F8FAFC' : '#F1F5F9',
+                    border: '1px solid #E2E8F0',
+                    borderRadius: 8, padding: '8px 12px', fontSize: 13,
+                    color: canEditStatus ? '#0F172A' : '#64748B',
+                    fontFamily: "'Geist Mono', monospace",
+                    cursor: canEditStatus ? 'text' : 'not-allowed'
+                  }}
+                />
+              </div>
+
               {/* Target Date */}
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#475569', marginBottom: 5 }}>
@@ -175,15 +226,15 @@ export const MilestoneCell = ({
                 />
               </div>
 
-              {/* Actual Date */}
+              {/* Tanggal Mulai Realisasi */}
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#475569', marginBottom: 5 }}>
-                  Actual Date (Selesai Real)
+                  Tanggal Mulai Realisasi
                 </label>
                 <input
                   type="date"
-                  value={formActualDate}
-                  onChange={(e) => setFormActualDate(e.target.value)}
+                  value={formActualStartDate}
+                  onChange={(e) => setFormActualStartDate(e.target.value)}
                   disabled={!canEditStatus}
                   style={{
                     width: '100%',
@@ -195,6 +246,34 @@ export const MilestoneCell = ({
                     cursor: canEditStatus ? 'text' : 'not-allowed'
                   }}
                 />
+              </div>
+
+              {/* Actual Date */}
+              <div>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#475569', marginBottom: 5 }}>
+                  Actual Date (Selesai Real) {formStatus === 'Done' && <span style={{ color: '#DC2626', fontWeight: 700 }}>* (Wajib jika Done)</span>}
+                </label>
+                <input
+                  type="date"
+                  value={formActualDate}
+                  onChange={(e) => setFormActualDate(e.target.value)}
+                  disabled={!canEditStatus}
+                  required={canEditStatus && formStatus === 'Done'}
+                  style={{
+                    width: '100%',
+                    background: canEditStatus ? (formStatus === 'Done' && !formActualDate ? '#FEF2F2' : '#F8FAFC') : '#F1F5F9',
+                    border: (formStatus === 'Done' && !formActualDate) ? '2px solid #EF4444' : '1px solid #E2E8F0',
+                    borderRadius: 8, padding: '8px 12px', fontSize: 13,
+                    color: canEditStatus ? '#0F172A' : '#64748B',
+                    fontFamily: "'Geist Mono', monospace",
+                    cursor: canEditStatus ? 'text' : 'not-allowed'
+                  }}
+                />
+                {formStatus === 'Done' && !formActualDate && (
+                  <p style={{ margin: '4px 0 0', fontSize: 11, color: '#DC2626', fontWeight: 600 }}>
+                    Harap masukkan tanggal realisasi aktual sebelum menyimpan status Done.
+                  </p>
+                )}
               </div>
 
               {/* Catatan Milestone - Restricted to users with edit access on this milestone */}

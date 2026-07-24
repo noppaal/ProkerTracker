@@ -52,3 +52,13 @@ input:focus, select:focus {
 .nav-item:hover { background: #E2E8F0 !important; }
 .nav-item-active { background: #2563EB !important; color: #FFFFFF !important; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
 .kpi-card:hover { border-color: #CBD5E1 !important; transform: translateY(-1px); transition: all 0.15s ease; }
+
+/* Timeline Gantt live overrun hatch pattern */
+.overrun-live { position: relative; }
+.overrun-live::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.45) 0 3px, transparent 3px 6px);
+}

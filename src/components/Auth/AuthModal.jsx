@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, User, Lock, Mail, Shield, Users, LogIn, UserPlus, Sparkles, Code } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, User, Lock, Mail, Shield, Users, LogIn, UserPlus, Sparkles, Code, Eye, EyeOff } from 'lucide-react';
 
 export const AuthModal = ({
   isOpen,
@@ -14,6 +14,21 @@ export const AuthModal = ({
   const [name, setName] = useState('');
   const [role, setRole] = useState('KARYAWAN');
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Clear inputs and messages when opening/closing
+  useEffect(() => {
+    if (isOpen) {
+      setEmail('');
+      setPassword('');
+      setName('');
+      setRole('KARYAWAN');
+      setErrorMsg('');
+      setSuccessMsg('');
+      setShowPassword(false);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -33,6 +48,7 @@ export const AuthModal = ({
   const handleRegister = (e) => {
     e.preventDefault();
     setErrorMsg('');
+    setSuccessMsg('');
 
     if (!name.trim() || !email.trim() || !password.trim()) {
       setErrorMsg('Semua kolom wajib diisi!');
@@ -54,91 +70,30 @@ export const AuthModal = ({
     };
 
     onRegisterUser(newUser);
-    onLoginSuccess(newUser);
-    onClose();
+    // After sign up, redirect to login tab, prefill email, and clear rest of the states
+    setActiveTab('login');
+    setEmail(email.trim());
+    setPassword('');
+    setName('');
+    setSuccessMsg('Registrasi berhasil! Silakan masuk dengan akun Anda yang baru didaftarkan.');
   };
 
-  const quickLogin = (demoUser) => {
-    onLoginSuccess(demoUser);
-    onClose();
-  };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
       <div className="bg-white w-full max-w-md rounded-2xl border border-slate-200 shadow-2xl overflow-hidden text-xs">
-        
+
         {/* Header */}
         <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white">
               <User className="w-4 h-4" />
             </div>
-            <h2 className="font-bold text-sm">Autentikasi & Akun Pengguna</h2>
+            <h2 className="font-bold text-sm">Masuk ke Sistem</h2>
           </div>
           <button onClick={onClose} className="p-1 rounded hover:bg-slate-800 text-slate-400">
             <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Quick Demo Login Buttons for 3 Roles */}
-        <div className="p-3.5 bg-slate-50 border-b border-slate-200">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-600 mb-2">
-            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-            <span>Login Cepat (Satu Klik Per Role):</span>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              onClick={() => quickLogin({ id: 'usr-tb', name: 'Budi Santoso (TB)', email: 'admin@company.com', role: 'TB' })}
-              className="px-2 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 border border-amber-300 text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition-all"
-            >
-              <Shield className="w-3.5 h-3.5 text-amber-600" />
-              <span>Transfer Bisnis</span>
-            </button>
-            
-            <button
-              type="button"
-              onClick={() => quickLogin({ id: 'usr-it', name: 'Rian Pratama (IT)', email: 'it@company.com', role: 'IT' })}
-              className="px-2 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-900 border border-purple-300 text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition-all"
-            >
-              <Code className="w-3.5 h-3.5 text-purple-600" />
-              <span>IT</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => quickLogin({ id: 'usr-karyawan', name: 'Siti Rahma (Karyawan)', email: 'staff@company.com', role: 'KARYAWAN' })}
-              className="px-2 py-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-900 border border-blue-300 text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition-all"
-            >
-              <Users className="w-3.5 h-3.5 text-blue-600" />
-              <span>Karyawan</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Tab Header */}
-        <div className="flex border-b border-slate-200 bg-white px-4">
-          <button
-            onClick={() => { setActiveTab('login'); setErrorMsg(''); }}
-            className={`flex-1 py-3 text-xs font-bold border-b-2 transition-all flex items-center justify-center gap-1.5 ${
-              activeTab === 'login'
-                ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-slate-500 hover:text-slate-900'
-            }`}
-          >
-            <LogIn className="w-3.5 h-3.5" />
-            <span>Masuk (Login)</span>
-          </button>
-          <button
-            onClick={() => { setActiveTab('register'); setErrorMsg(''); }}
-            className={`flex-1 py-3 text-xs font-bold border-b-2 transition-all flex items-center justify-center gap-1.5 ${
-              activeTab === 'register'
-                ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-slate-500 hover:text-slate-900'
-            }`}
-          >
-            <UserPlus className="w-3.5 h-3.5" />
-            <span>Daftar Baru (Sign Up)</span>
           </button>
         </div>
 
@@ -149,138 +104,60 @@ export const AuthModal = ({
           </div>
         )}
 
+        {/* Success Alert */}
+        {successMsg && (
+          <div className="m-4 mb-0 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
+            {successMsg}
+          </div>
+        )}
+
         {/* Form Body */}
-        {activeTab === 'login' ? (
-          <form onSubmit={handleLogin} className="p-5 space-y-3.5 text-xs">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Email Pengguna</label>
-              <div className="relative">
-                <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@company.com"
-                  required
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Password</label>
-              <div className="relative">
-                <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white"
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full mt-2 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-1.5"
-            >
-              <LogIn className="w-4 h-4" />
-              <span>Masuk ke Akun</span>
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleRegister} className="p-5 space-y-3.5 text-xs">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Contoh: Ahmad Hidayat"
-                required
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Email Pengguna</label>
+        <form onSubmit={handleLogin} className="p-5 space-y-3.5 text-xs">
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1">Email Pengguna</label>
+            <div className="relative">
+              <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="user@company.com"
                 required
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white"
               />
             </div>
+          </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Password</label>
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1">Password</label>
+            <div className="relative">
+              <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-10 py-2 text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
+          </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Peran / Hak Akses (Role)</label>
-              <div className="grid grid-cols-3 gap-2 mt-1">
-                <button
-                  type="button"
-                  onClick={() => setRole('TB')}
-                  className={`p-2 rounded-xl border flex flex-col items-center gap-1 transition-all ${
-                    role === 'TB'
-                      ? 'bg-amber-50 border-amber-400 text-amber-900 font-bold ring-2 ring-amber-500/20'
-                      : 'bg-slate-50 border-slate-200 text-slate-600'
-                  }`}
-                >
-                  <Shield className="w-3.5 h-3.5 text-amber-600" />
-                  <span className="text-[10px]">Transfer Bisnis</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setRole('IT')}
-                  className={`p-2 rounded-xl border flex flex-col items-center gap-1 transition-all ${
-                    role === 'IT'
-                      ? 'bg-purple-50 border-purple-400 text-purple-900 font-bold ring-2 ring-purple-500/20'
-                      : 'bg-slate-50 border-slate-200 text-slate-600'
-                  }`}
-                >
-                  <Code className="w-3.5 h-3.5 text-purple-600" />
-                  <span className="text-[10px]">IT</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setRole('KARYAWAN')}
-                  className={`p-2 rounded-xl border flex flex-col items-center gap-1 transition-all ${
-                    role === 'KARYAWAN'
-                      ? 'bg-blue-50 border-blue-400 text-blue-900 font-bold ring-2 ring-blue-500/20'
-                      : 'bg-slate-50 border-slate-200 text-slate-600'
-                  }`}
-                >
-                  <Users className="w-3.5 h-3.5 text-blue-600" />
-                  <span className="text-[10px]">Karyawan</span>
-                </button>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full mt-2 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-1.5"
-            >
-              <UserPlus className="w-4 h-4" />
-              <span>Daftar Akun Baru</span>
-            </button>
-          </form>
-        )}
+          <button
+            type="submit"
+            className="w-full mt-2 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-1.5"
+          >
+            <LogIn className="w-4 h-4" />
+            <span>Masuk ke Akun</span>
+          </button>
+        </form>
 
       </div>
     </div>

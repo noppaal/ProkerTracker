@@ -8,8 +8,6 @@ export const FilterBar = ({
   setPriorityFilter,
   statusFilter,
   setStatusFilter,
-  isExpandAll,
-  toggleExpandAll,
   role
 }) => {
   const hasFilter = !!searchQuery || priorityFilter !== 'ALL' || statusFilter !== 'ALL';
@@ -88,22 +86,6 @@ export const FilterBar = ({
           <X size={13} /> Reset
         </button>
       )}
-
-      <div style={{ flex: 1 }} />
-
-      {/* Accordion Expand/Collapse All */}
-      <button
-        onClick={toggleExpandAll}
-        style={{
-          fontSize: 13, color: '#64748B', background: '#FFFFFF',
-          border: '1px solid #E2E8F0', padding: '7px 12px', borderRadius: 8, cursor: 'pointer',
-          display: 'flex', alignItems: 'center', gap: 6, fontWeight: 500,
-          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)'
-        }}
-      >
-        <ChevronRight size={13} style={{ transform: isExpandAll ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }} />
-        {isExpandAll ? 'Tutup Semua Sub' : 'Buka Semua Sub'}
-      </button>
 
     </div>
   );

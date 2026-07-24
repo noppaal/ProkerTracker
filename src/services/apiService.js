@@ -159,13 +159,7 @@ export const calculateSubProkerProgress = (subItem, dynamicMilestones = []) => {
  * Calculates average progress percentage for a Master Proker across all its Sub-Items.
  */
 export const calculateMasterProkerProgress = (masterProker, dynamicMilestones = []) => {
-  if (!masterProker || !masterProker.subItems || masterProker.subItems.length === 0) return 0;
-
-  const totalProgressSum = masterProker.subItems.reduce((acc, sub) => {
-    return acc + calculateSubProkerProgress(sub, dynamicMilestones);
-  }, 0);
-
-  return Math.round(totalProgressSum / masterProker.subItems.length);
+  return calculateSubProkerProgress(masterProker, dynamicMilestones);
 };
 
 export const calculateDateDelay = (targetDateStr, actualDateStr) => {

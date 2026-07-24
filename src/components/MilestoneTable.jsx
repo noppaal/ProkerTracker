@@ -15,7 +15,7 @@ export const MilestoneTable = ({
   onEditSubItem,
   role
 }) => {
-  const isAdmin = role === 'TB' || role === 'ADMIN';
+  const isAdmin = role === 'TB';
 
   // Sub-program Note Edit Modal State
   const [editingSubNote, setEditingSubNote] = useState(null); // { subId, name, text }
